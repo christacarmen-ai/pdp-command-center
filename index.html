@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Christa Diaz Consulting — Company Command Center</title>
+<script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #060a14;
+  --bg-card: #0c1322;
+  --bg-card2: #101929;
+  --border: #1a2840;
+  --border-hi: #243555;
+  --text: #e6edff;
+  --text-2: #7b90c4;
+  --text-3: #435070;
+  --blue: #3b82f6;
+  --cyan: #06b6d4;
+  --emerald: #10b981;
+  --amber: #f59e0b;
+  --rose: #f43f5e;
+  --violet: #8b5cf6;
+  --indigo: #6366f1;
+  --teal: #14b8a6;
+}
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 5% 0%, rgba(59,130,246,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 95% 100%, rgba(139,92,246,0.05) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+#root {
+  position: relative;
+  z-index: 1;
+  max-width: 1640px;
+  margin: 0 auto;
+  padding: 0 28px 60px;
+}
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; }
+.card2 { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 8px; }
+.label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+.mono { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; }
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px; border-radius: 5px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.tg { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.tb { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+.ta { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+.tr { background: rgba(244,63,94,0.12); color: #fb7185; border: 1px solid rgba(244,63,94,0.2); }
+.tv { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
+.tc { background: rgba(6,182,212,0.12); color: #22d3ee; border: 1px solid rgba(6,182,212,0.2); }
+.tgray { background: rgba(67,80,112,0.18); color: var(--text-2); border: 1px solid rgba(67,80,112,0.25); }
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  display: inline-block; flex-shrink: 0; vertical-align: middle;
+}
+.dg { background: var(--emerald); box-shadow: 0 0 6px rgba(16,185,129,0.6); }
+.db { background: var(--blue); box-shadow: 0 0 6px rgba(59,130,246,0.6); animation: blink 2s ease-in-out infinite; }
+.da { background: var(--amber); box-shadow: 0 0 6px rgba(245,158,11,0.5); }
+.dgray { background: var(--text-3); }
+.dv { background: var(--violet); box-shadow: 0 0 6px rgba(139,92,246,0.5); }
+@keyframes blink { 0%,100%{opacity:0.65} 50%{opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.fadein { animation: fadeUp 0.35s ease-out both; }
+.prog { height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+.prog-bar { height: 100%; border-radius: 3px; transition: width 1.1s cubic-bezier(0.4,0,0.2,1); }
+.nav-tab {
+  padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 500;
+  cursor: pointer; border: 1px solid transparent; color: var(--text-2);
+  transition: all 0.18s; background: none; white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.nav-tab.active { color: var(--text); background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.28); }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+.g6 { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; }
+.g64 { display: grid; grid-template-columns: 6fr 4fr; gap: 16px; }
+.g46 { display: grid; grid-template-columns: 4fr 6fr; gap: 16px; }
+.g55 { display: grid; grid-template-columns: 5fr 5fr; gap: 16px; }
+.dtable { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dtable th {
+  text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-3); padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.dtable td {
+  padding: 9px 14px; border-bottom: 1px solid rgba(26,40,64,0.6);
+  color: var(--text-2); vertical-align: middle;
+}
+.dtable tr:last-child td { border-bottom: none; }
+.dtable tr:hover td { background: rgba(255,255,255,0.015); color: var(--text); }
+.sec {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-3); display: flex; align-items: center; gap: 8px;
+}
+.sec::before { content:''; width: 3px; height: 11px; border-radius: 2px; background: var(--blue); flex-shrink: 0; }
+.sprint-banner {
+  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.09));
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: 12px;
+}
+.scroll-x { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+// __DATA_INJECT_START__
+window.__PDP_DATA__ = {"generated_at": "2026-04-02 11:03:10", "git": {"engine_version": "4.1.1", "current_branch": "frontend/crazy-driscoll", "last_commit_date": "2026-04-01 11:10", "last_commit_msg": "feat(agents): add longitudinal research agent spec and S004 sprint docs", "uncommitted_files": 3}, "tests": {"passing": 145, "skipped": 4, "failed": 0, "total": 149, "_fallback": true}, "system_version": "5.0", "phases": [{"id": 1, "name": "Foundation Fixes", "estimate": "2 weeks from Mar 2", "tasks": [{"id": "1.1", "name": "Extend ordinal scale to 1-6", "status": "shipped", "sprint": "S001"}, {"id": "1.2", "name": "Zero out unlisted stem features", "status": "shipped", "sprint": "S001"}, {"id": "1.3", "name": "Fix TIER axis formula", "status": "shipped", "sprint": "S001"}, {"id": "1.4", "name": "Add Loevinger stage lookup table", "status": "shipped", "sprint": "S001"}, {"id": "1.5", "name": "Remove PDP-STA from parallel scoring", "status": "shipped", "sprint": "S001"}, {"id": "1.6", "name": "Update test suite", "status": "shipped", "sprint": "S002"}], "progress": 100, "status": "shipped"}, {"id": 2, "name": "Convergence Engine", "estimate": "3-4 weeks", "tasks": [{"id": "2.1", "name": "ANCHOR step (Commons MHC)", "status": "shipped", "sprint": "S001"}, {"id": "2.2", "name": "VALIDATE step (Kegan)", "status": "shipped", "sprint": "S001"}, {"id": "2.3", "name": "CALIBRATE step (Loevinger + Cook-Greuter)", "status": "shipped", "sprint": "S001"}, {"id": "2.4", "name": "Convergence evaluator", "status": "shipped", "sprint": "S001"}, {"id": "2.5", "name": "Diagnostic flags", "status": "shipped", "sprint": "S001"}, {"id": "2.6", "name": "RAG integration", "status": "queued"}, {"id": "2.7", "name": "Exemplar DB cross-check", "status": "queued"}], "progress": 71, "status": "active"}, {"id": 3, "name": "Crosswalk + Downstream", "estimate": "1-2 weeks", "tasks": [{"id": "3.1", "name": "Model translation updates", "status": "shipped", "sprint": "S001"}, {"id": "3.2", "name": "Cross-model lookup tables", "status": "shipped", "sprint": "S002"}, {"id": "3.3", "name": "Edge case handling", "status": "queued"}], "progress": 67, "status": "active"}, {"id": 4, "name": "Practice Prescription + Attachment", "estimate": "2-3 weeks", "tasks": [{"id": "4.1", "name": "Practice prescription lookup", "status": "queued"}, {"id": "4.2", "name": "Feature profile modifiers", "status": "queued"}, {"id": "4.3", "name": "AHI/RPI 5-subscale integration", "status": "active"}, {"id": "4.4", "name": "Attachment-practice sequencing", "status": "queued"}], "progress": 0, "status": "active"}, {"id": 5, "name": "Output + Integration", "estimate": "2-3 weeks", "tasks": [{"id": "5.1", "name": "DOCX report generator (5 branded docs)", "status": "shipped", "sprint": "S-BIZ-001", "note": "generate_report.py + docx_builder.py built Mar 30"}, {"id": "5.2", "name": "JSX interactive tools", "status": "queued"}, {"id": "5.3", "name": "Cognito Forms pipeline", "status": "active", "note": "COGNITO_QUICKSTART.md ready, needs Pro plan setup"}, {"id": "5.4", "name": "End-to-end testing", "status": "queued"}], "progress": 25, "status": "active"}, {"id": 6, "name": "Business Operations (5-Agent Architecture)", "estimate": "30 days from Mar 30", "tasks": [{"id": "6.1", "name": "Supabase core schema + CRM views + RLS policies", "status": "shipped", "sprint": "S-BIZ-001", "note": "3 SQL migrations ready for Jon to deploy"}, {"id": "6.2", "name": "Intake Agent spec", "status": "shipped", "sprint": "S-BIZ-001", "note": "intake_agent.py \u2014 Cognito \u2192 Supabase \u2192 Stripe"}, {"id": "6.3", "name": "Delivery Agent spec", "status": "shipped", "sprint": "S-BIZ-001", "note": "delivery_agent.py \u2014 report pipeline + client journey"}, {"id": "6.4", "name": "CRM Agent spec", "status": "shipped", "sprint": "S-BIZ-001", "note": "crm_agent.py \u2014 single source of truth for all records"}, {"id": "6.5", "name": "Email templates (9 lifecycle emails)", "status": "shipped", "sprint": "S-BIZ-001", "note": "intake, payment, welcome T1-T4, followup, delivery, 30-day checkin"}, {"id": "6.6", "name": "n8n workflow orchestration config", "status": "shipped", "sprint": "S-BIZ-001", "note": "workflows.json ready for Railway n8n deploy"}, {"id": "6.7", "name": "Stripe payment links (Sprint 0 manual revenue)", "status": "active", "note": "Account exists, needs T1/T2/T3/T4 links created"}, {"id": "6.8", "name": "Pipeline Agent spec", "status": "queued", "note": "Outreach + conversion \u2014 deferred until Intake/Delivery live"}, {"id": "6.9", "name": "Content Agent spec", "status": "queued", "note": "Content + reach \u2014 deferred luxury"}, {"id": "6.10", "name": "Jon deploys Supabase + n8n on Railway", "status": "queued", "note": "Blocked on Jon availability"}, {"id": "6.11", "name": "Atomic CRM fork (Vercel)", "status": "queued", "note": "marmelab/atomic-crm for Sherry"}], "progress": 55, "status": "active"}, {"id": 8, "name": "Developmental Arc Agent (Agent 6)", "estimate": "Completed Mar 31", "tasks": [{"id": "8.1", "name": "Plaud API client + LevelDB token extraction", "status": "shipped", "sprint": "S-ARC-001", "note": "plaud_fetcher.py \u2014 Bearer token + local folder fallback"}, {"id": "8.2", "name": "Free-text PDP scorer (8 features, free-form speech)", "status": "shipped", "sprint": "S-ARC-001", "note": "transcript_scorer.py \u2014 adapted from stem format; phenomenological marker library 5.0/5.5/6.0"}, {"id": "8.3", "name": "Arc builder \u2014 timeline, transitions, phenomenology emergence", "status": "shipped", "sprint": "S-ARC-001", "note": "arc_builder.py \u2014 monthly aggregates, rolling 5-window transition detection"}, {"id": "8.4", "name": "Interactive HTML arc map (5 tabs)", "status": "shipped", "sprint": "S-ARC-001", "note": "map_generator.py \u2014 128KB self-contained; arc overview, timeline, features, phenomenology, transitions"}, {"id": "8.5", "name": "CLI orchestrator with all run modes", "status": "shipped", "sprint": "S-ARC-001", "note": "plaud_arc_agent.py \u2014 token/folder/load-json/demo/skip-scoring modes"}, {"id": "8.6", "name": "Git repo initialized", "status": "shipped", "sprint": "S-ARC-001", "note": "~/Desktop/PDP_Arc_Agent/ commit 42526c2"}, {"id": "8.7", "name": "Connect to live Plaud library (118 recordings)", "status": "active", "note": "Needs Plaud Bearer token from web.plaud.ai DevTools"}, {"id": "8.8", "name": "Score full library and generate live arc map", "status": "queued", "note": "~18-22 min, ~$0.18 API cost"}, {"id": "8.9", "name": "Promote high-confidence transcripts to exemplar DB", "status": "queued", "note": "5.0-6.0 scored transcripts \u2192 backpropagate_golds.py"}], "progress": 67, "status": "active"}, {"id": 7, "name": "Late-Stage Scoring Enhancement", "estimate": "Completed Mar 30", "tasks": [{"id": "7.1", "name": "Late-stage linguistic validation module", "status": "shipped", "sprint": "S-BIZ-001", "note": "pdp_scoring/late_stage.py \u2014 MetAware 5.0+ disambiguation"}, {"id": "7.2", "name": "Exemplar DB expansion to 6.5 (142 new exemplars)", "status": "shipped", "sprint": "S-BIZ-001"}, {"id": "7.3", "name": "Fingerprint output updates", "status": "shipped", "sprint": "S-BIZ-001"}, {"id": "7.4", "name": "Late-stage test suite", "status": "shipped", "sprint": "S-BIZ-001", "note": "test_late_stage.py"}, {"id": "7.5", "name": "Developer handoff doc for Jon", "status": "shipped", "sprint": "S-BIZ-001"}], "progress": 100, "status": "shipped"}], "sprints": [{"id": "S004", "name": "longitudinal-research", "status": "shipped", "date": "2026-03-31", "summary": "Longitudinal research survey component: 3 Supabase tables (research_participants, longitudinal_responses, scheduled_emails, migration 004), longitudinal_agent.py (5 tools: log_survey_response, check_reassessment_trigger, code_response, get_research_digest, get_participant_arc), enroll_research_participant added as Tool 13 to delivery_agent.py with hook in resume_delivery_after_qa, Claude Code agent spec. FastAPI endpoints: /agents/longitudinal/log_response, /digest, /arc/{code}. Phase 1: manual collection + enrollment + email scheduling. Phase 2 (LSS auto-scoring) deferred to Month 3+."}, {"id": "S003", "name": "ui-scoring-dashboard", "status": "shipped", "date": "2026-03-19", "summary": "React 19 + TypeScript + Vite scoring dashboard. 11-section SPA: data import (TSV/CSV/JSON), stem grid, assessment view, feature means, PP Grid, convergence pipeline, scored models, cross-model table, diagnostics, AHI/RPI attachment health, practice prescription. Claude API integration for AI scoring. Full ahi-scoring-module.js (884 lines). Feature inventory documented. Chief scientist changes integrated and validated. Engine v4.1.1, UI v0.0.1."}, {"id": "S002", "name": "convergence-fixes", "status": "shipped", "date": "2026-03-07", "summary": "CALIBRATE score-based switching (DD1/DD2), ego_ahead_of_cognitive_complexity flag at gap\u22651.0 (DD3, O1), PT=4 confirmed (DD4, O2), 6 synthetic fixtures, crosswalk table corrections (Torbert 4, Fowler 2, Kohlberg 1, Loevinger PP 3). Open item O3: Kohlberg PP 1.5\u20133.0. 145 tests, 4 skipped."}, {"id": "S001", "name": "convergence-pipeline", "status": "shipped", "date": "2026-03-06", "summary": "Implement v4.1 architecture: sequential convergence (ANCHOR/VALIDATE/CALIBRATE), rewrite PDP-STA axes, corrected thresholds, v4.1 diagnostics, crosswalk models. 12 code discrepancies from Unified Statement. Phase 1 (B1-B4): feature rubrics, PP Grid, stem weights, model profiles. Phase 2 (B5-B7): convergence engine, PP crosswalk, pipeline restructure. Phase 3 (B8-B10): v4.1 threshold tables, Gebser crosswalk, diagnostic flags, acceptance tests. Phase 4 (B11-B13): docs, memory. 55 tests, all passing."}], "risks": [{"severity": "high", "title": "Prompt contamination", "detail": "`getAHIPromptBlock()` injects attachment-context text into every LLM scoring prompt, for all 13 stems and all 8 features \u2014 not just attachment-relevant ones"}, {"severity": "medium", "title": "Unsanitized HTML injection", "detail": "`AHIPanel.tsx` renders `renderAHIPanel()` output via `dangerouslySetInnerHTML` \u2014 no sanitization layer"}, {"severity": "medium", "title": "Gate logic is binary", "detail": "`developmentalGate === 'CLOSED'` is a hard block with no practitioner override"}, {"severity": "medium", "title": "`scoreAttachment` is synchronous", "detail": "called inline in an async handler with no await \u2014 will fail silently if real module is async"}, {"severity": "low", "title": "Pending adjudication", "detail": "O3: Kohlberg PP crosswalk at PP 1.5, 2.0, 2.5, 3.0 \u2014 Section 2.7 and Section 3.2 disagree. Current code follows 2.7."}], "changelog": [{"version": "Unreleased", "date": "", "sections": {"Pending (requires Christa adjudication)": ["O3: Kohlberg PP crosswalk at PP 1.5, 2.0, 2.5, 3.0 \u2014 Section 2.7 and Section 3.2 disagree. Current code follows 2.7."]}}, {"version": "4.1.1", "date": "2026-03-19", "sections": {"Added (UI 0.0.1 \u2014 React 19 scoring dashboard)": ["Full React 19 + TypeScript + Vite scoring dashboard (`ui/`)", "11-section single-page layout: data import, stem grid, assessment view, feature means, PP Grid, convergence pipeline, scored models, cros...", "TSV/CSV/JSON paste import with 13x8 stem grid and accordion assessment view", "Claude API integration for AI-assisted feature scoring (per-stem and batch)", "AHI/RPI attachment scoring layer with typed interfaces (`AHIScore`, `RPIScore`, `AHIProtocol`, `AttachmentGate`, `AttachmentResult`)", "`AssessmentView.tsx`: \"Score All Stems\" calls `scoreAttachment(responses)` after feature scoring; stem count badge; 3-stem minimum threshold", "`AHIPanel.tsx`: dual-mode rendering \u2014 module HTML or manual slider fallback", "`PrescriptionPanel.tsx`: developmental gate check \u2014 CLOSED gate shows clinical referral (decompensation risk warning, 6-month re-assessment)", "`scoring-ai.ts`: `getAHIPromptBlock()` appended to every LLM feature-scoring prompt", "Global store with `attachmentResult`, `setAttachmentResult`, theme, view mode, expanded stems, API settings", "JSON export/download with full fingerprint", "Settings drawer with Claude API key and model selector", "`ui/ahi-scoring-module.js` \u2014 full 884-line AHI scoring module", "`ui/_docs/FEATURE_INVENTORY.md` \u2014 comprehensive feature inventory used for UI replication"], "Changed (UI)": ["Default view mode changed from `'grid'` to `'assessment'`", "All 13 stems start expanded (previously collapsed)"], "Risks to flag": ["**Prompt contamination**: `getAHIPromptBlock()` injects attachment-context text into every LLM scoring prompt, for all 13 stems and all 8...", "**Unsanitized HTML injection**: `AHIPanel.tsx` renders `renderAHIPanel()` output via `dangerouslySetInnerHTML` \u2014 no sanitization layer", "**Gate logic is binary**: `developmentalGate === 'CLOSED'` is a hard block with no practitioner override", "**`scoreAttachment` is synchronous**: called inline in an async handler with no await \u2014 will fail silently if real module is async"]}}, {"version": "4.1.0", "date": "2026-03-07", "sections": {"Added (S002)": ["`ego_ahead_of_cognitive_complexity` convergence flag \u2014 fires when Kegan leads MHC by \u2265 1.0 (DD3)", "6 synthetic gold-standard fixtures in `tests/test_synthetic_cases.py` (26 tests, all THEORETICAL)", "`tests/test_crosswalk_tables.py` \u2014 60 parametrized PP sweep tests for all crosswalk/display models", "8 new tests in test_engine.py: CALIBRATE switching (4) + Kegan flag (4)", "`_docs/architecture/` directory for the 4-doc authority stack"], "Fixed (S002)": ["CALIBRATE switching: score-based replaces midpoint-based (DD1/DD2) \u2014 aligns with tessera", "Torbert PP table: 4 cells corrected (1.5\u2192Impulsive, 2.0\u2192Opportunist, 2.5\u2192Diplomat, 4.0\u2192Strategist)", "Fowler PP table: 2 cells corrected (2.0\u2192Synthetic-Conventional, 3.0\u2192Individuative-Reflective)", "Kohlberg PP table: PP 4.0 corrected from \"Post-conv 4-5\" to \"Post-conv 5\"", "Loevinger PP correspondence: 3-cell offset fixed at 3.5/4.0/4.5 per Section 3.1"], "Added (S001)": ["Fidelity audit: Lillicrap-Kording register comparing implementation against v4.1 architecture", "B5: `ConvergenceStep`, `ConvergenceResult`, `ConfidenceLevel` types in `pdp_types.py`", "B5: `convergence` field on `AssessmentResult`; `pp_stage` now Optional (null at LOW confidence)", "B6: `convergence.py` \u2014 ANCHOR(MHC) \u2192 VALIDATE(Kegan) \u2192 CALIBRATE(Loevinger+CG) pipeline", "B6: v4.1 threshold tables with `<` comparisons (MHC Metasystematic < 4.75, corrected from v3)", "B6: Confidence gate: HIGH / MEDIUM / LOW", "B6: MEDIUM confidence feature mean adjustments \u2014 emotional_lag, task_inflation, cognitive_lead patterns", "B6: Vocabulary inflation flag (MHC-Kegan gap \u2265 1.0) and cognitive_ahead flag (gap \u2265 0.5)", "B7: PP crosswalk tables for Kohlberg, Fowler, Torbert in `model_translation.py`", "B7: `translate_computational_models()` and `translate_crosswalk_models()` functions", "B8: v4.1 threshold boundary tests for all 7 lookup tables (8 tests)", "B8: Gebser crosswalk tests (4 tests)", "B9: `compute_v41_flags()` \u2014 5 named diagnostic flags", "B9: `diagnostic_flags` field on `DiagnosticResult`", "B10: Gold-standard acceptance test (full v4.1 pipeline + fingerprint validation)", "Registers infrastructure and first register run", "6 agent definitions, cursor rules, sprint tracking"], "Changed (S001)": ["B8: All 7 model lookup tables updated to v4.1 corrected thresholds with `<` operator", "B8: Gebser promoted from display-only to crosswalk model (4 crosswalk total)", "B8: Display models reduced to 2: Loevinger PP correspondence + Spiral Dynamics", "B9: Cluster analysis updated \u2014 loevinger replaces pdp_sta in Structural cluster", "B7: `scoring.py` restructured \u2014 convergence drives pipeline", "B7: Crosswalk models now receive stage from PP lookup, not weighted scores"], "Fixed (S001)": ["PP 5.0 stage name standardized to \"Construct-Aware\"", "Loevinger PP correspondence table completed through 6.5", "Loevinger PP 3.0 E-code corrected from (E6) to (E5-E6)"], "Confirmed (S002)": ["PT=4 weight for Kohlberg (Selman 1980) and Fowler (7 scored aspects) \u2014 DD4, closes O2"], "Added": ["B8: v4.1 threshold boundary tests for all 7 lookup tables (8 tests)", "B8: Gebser crosswalk tests (4 tests)", "B9: `compute_v41_flags()` \u2014 5 named diagnostic flags: cc_pt_split, defensive_rigidity, emotional_lag, socialized_ceiling, vocabulary_infl...", "B9: `diagnostic_flags` field on `DiagnosticResult`", "B9: v4.1 diagnostic flag tests (7 tests)", "B10: Gold-standard acceptance test (full v4.1 pipeline + fingerprint validation)", "B10: `diagnostic_flags` in fingerprint JSON output", "Registers infrastructure: L-K analysis template (`_docs/registers/lillicrap-kording.md`), invocation pattern in CLAUDE.md, conventions in...", "First register run: `_docs/registers/2026-03-06-pdp-scoring-pipeline.md` \u2014 full Lillicrap-Kording analysis of PDP Scoring Pipeline v4.1 (...", "B5: `ConvergenceStep`, `ConvergenceResult`, `ConfidenceLevel` types in `pdp_types.py`", "B5: `convergence` field on `AssessmentResult`; `pp_stage` now Optional (null at LOW confidence)", "B6: `convergence.py` \u2014 ANCHOR(MHC) \u2192 VALIDATE(Kegan) \u2192 CALIBRATE(Loevinger+CG) pipeline", "B6: v4.1 threshold tables with `<` comparisons (MHC Metasystematic < 4.75, corrected from v3)", "B6: Confidence gate: HIGH (spread \u2264 0.5) / MEDIUM (2 of 3 within 0.5) / LOW (all diverge)", "B6: MEDIUM confidence feature mean adjustments \u2014 emotional_lag, task_inflation, cognitive_lead patterns", "B6: Vocabulary inflation flag (MHC-Kegan gap \u2265 1.0) and cognitive_ahead flag (gap \u2265 0.5)", "B7: PP crosswalk tables for Kohlberg, Fowler, Torbert in `model_translation.py`", "B7: `translate_computational_models()` and `translate_crosswalk_models()` functions", "B7: Convergence section in fingerprint JSON output", "`pyproject.toml` with uv, pytest, ruff configuration", "`lookup_loevinger()` scored threshold table for convergence pipeline", "Project infrastructure: `_docs/CONVENTIONS.md`, sprint tracking (`_docs/sprints/`), review and retro directories", "Sprint S001 (convergence-pipeline): 13-block plan to implement all 12 v4.1 code discrepancies", "6 agent definitions in `.claude/agents/`: critic, staff-engineer, research-scientist, conventions, pipeline-integrity, retro", "Cursor rules in `.cursor/rules/`: convergence-pipeline architecture, authority-hierarchy", "Session retrospective skill in `.claude/skills/session-retrospective/`"], "Changed": ["B8: All 7 model lookup tables updated to v4.1 corrected thresholds with `<` operator (matching convergence.py)", "B8: Gebser promoted from display-only to crosswalk model (now 4 crosswalk: Kohlberg, Fowler, Torbert, Gebser)", "B8: Display models reduced to 2: Loevinger PP correspondence + Spiral Dynamics", "B8: Removed dead code: `translate_scored_models()`, `lookup_pdp_sta()`, `PDP_STA_TABLE`, `gebser_from_pp()`", "B9: Cluster analysis updated \u2014 loevinger replaces pdp_sta in Structural cluster", "B9: `run_all_diagnostics()` accepts `pp_stage` parameter for post-hoc flag checks", "B9: `ScoredModelName` updated: added gebser + loevinger, removed pdp_sta", "B9: `DisplayModelName` reduced: gebser removed (now crosswalk)", "B10: Test expectations updated for Gebser crosswalk (4 crosswalk, 2 display)", "B10: Fingerprint serialization includes `diagnostic_flags`", "B7: `scoring.py` restructured \u2014 convergence drives pipeline; feature means adjusted at MEDIUM confidence; PP stage constrained by calibra...", "B7: Crosswalk models (Kohlberg, Fowler, Torbert) now receive stage from PP lookup, not weighted scores", "B7: `test_engine.py` rewritten with proper pytest structure (33 tests, gold-standard acceptance test)", "**Project layout**: flat package \u2192 standard `pdp_scoring/` directory + `tests/` + `pyproject.toml`", "`types.py` renamed to `pdp_types.py` (eliminates stdlib `types` module shadow)", "`import pdp_scoring` now works via `uv sync && uv run` \u2014 no `sys.path` hacks needed", "B1: Feature rubrics extended from 1-5 to 1-6 ordinal scale (v4.1 Reconciliation 2.4)", "B2: PP Grid axis computation rewritten \u2014 TIER=mean(PT,CC,MM), SOCIAL < 3.5 threshold, LEARNING STYLE with tier-relative midpoints, neares...", "B3: Stem weights corrected \u2014 PRIMARY=1.0x, SECONDARY=0.5x, UNLISTED=0.0x (skip)", "B4: `SCORED_MODEL_PROFILES` legacy alias removed; `COMPUTATIONAL_MODELS` + `CROSSWALK_MODELS` used directly", "Gebser reclassified from display-only to crosswalk model (same treatment as Kohlberg, Fowler, Torbert)", "O1 resolved: Kegan > MHC flag threshold set at 0.5 gap (estimated, adjustable)"]}}, {"version": "4.0.0", "date": "2026-03-05", "sections": {"Changed": ["Architecture v4.0 locked as single source of truth: sequential convergence pipeline (Anchor/MHC \u2192 Validate/Kegan \u2192 Calibrate/Cook-Greuter...", "Model roles reclassified: 4 computational (MHC, Kegan, Cook-Greuter, Loevinger), 3 crosswalk-only (Kohlberg, Fowler, Torbert), 2 display-...", "PDP-STA moved from parallel scored model to translation layer after convergence gate", "Loevinger promoted from display-only to CALIBRATE weight profile contributor", "Tier threshold corrected: MetAware boundary raised from 4.0 to 5.0 (fixes 4.5 Strategist \u2192 6.5 Illumined bug)", "MHC Metasystematic ceiling corrected to < 4.75 (fixes Paradigmatic inflation)", "PP Grid stage names corrected per O'Fallon STAGES Matrix (1.5 Egocentric, 2.0 Rule Oriented, 2.5 Conformist)", "Cook-Greuter at PP 4.5 corrected from \"Strategist\" to \"Construct-Aware\"; Torbert at PP 4.5 from \"Transforming\" to \"Alchemist\"", "Stem-level weights: unlisted features now 0.0x (was 0.5x baseline)"], "Added": ["Convergence confidence gate with MEDIUM/LOW adjustment rules and PP Stage constraint (calibrated_level + 0.5 ceiling)", "Full PDP-STA axis computation spec: Tier, Social orientation, Learning style with tier-relative midpoints", "Complete 1-6 feature scoring rubrics for all 8 features", "Diagnostic flag formulas (CC/PT split, defensive rigidity, emotional lag, socialized ceiling, vocabulary inflation)", "Gebser added as display-only crosswalk model", "Complete display model lookup tables (Loevinger, Kohlberg, Fowler, Torbert, Gebser)", "JSON export schema with convergence structure", "Validated 4.5 Strategist test case with full pipeline trace", "Architecture docs: v4.0 spec, v4.1 divergence resolutions, v4.1 reconciliation, v4.1b precision layer", "Channel RAGs updated to v1.1 with corrected thresholds and code-ready tables"]}}, {"version": "3.0.1", "date": "2026-03-02", "sections": {"Added": ["Version tagging workflow (`/tag` command) with major/minor/patch bumping", "CLAUDE.md project conventions and .claude/instructions.md quick reference", "GitHub Actions release workflow for automatic contributor notifications", "LICENSE.md (All Rights Reserved, Christa Diaz Consulting, LLC)"], "Changed": ["Moved RAG model docs into repo (`rag/docs/`) \u2014 repo is now self-contained", "Version is now read from `VERSION` file (single source of truth)"]}}], "commits": [{"hash": "5e311cc", "date": "2026-04-01 11:10", "subject": "feat(agents): add longitudinal research agent spec and S004 sprint docs", "branch": "HEAD -> frontend/crazy-driscoll, origin/frontend/crazy-driscoll"}, {"hash": "8049210", "date": "2026-03-31 11:59", "subject": "docs: add agent architecture, strategic reference, and master vision", "branch": ""}, {"hash": "71f7d13", "date": "2026-03-30 11:46", "subject": "docs(handoff): add late-stage module developer handoff for Jon", "branch": ""}, {"hash": "529474f", "date": "2026-03-30 11:06", "subject": "feat(late-stage): add linguistic validation module for MetAware tier (5.0-6.5)", "branch": ""}, {"hash": "506dd88", "date": "2026-03-29 14:55", "subject": "feat(exemplar-db): back-propagate 10 gold standards + dashboard", "branch": ""}, {"hash": "9f7b2ef", "date": "2026-03-29 12:19", "subject": "fix: handle fingerprint JSON format in data import for AHI scoring", "branch": ""}, {"hash": "eb83822", "date": "2026-03-29 12:16", "subject": "feat(scoring): 10/10 gold standards validated \u2014 convergence-derived staging + exemplar DB indexed", "branch": ""}, {"hash": "04d0a60", "date": "2026-03-29 12:12", "subject": "fix: complete AHI data flow from JSON import through engine to UI", "branch": ""}, {"hash": "c366ee3", "date": "2026-03-29 11:24", "subject": "fix: wire AHI attachment scoring through UI to Python backend", "branch": ""}, {"hash": "2150d23", "date": "2026-03-29 11:00", "subject": "feat: add attachment health scoring (AHI/RPI) to unified engine", "branch": ""}, {"hash": "56b404d", "date": "2026-03-29 09:14", "subject": "feat(scoring): add convergence floor + re-score gold #6 construct-aware stems", "branch": ""}, {"hash": "01d297d", "date": "2026-03-28 14:15", "subject": "feat(gold): add gold standard 06 (stage 5.0) and validation runner", "branch": ""}, {"hash": "91f245c", "date": "2026-03-28 14:15", "subject": "feat(exemplar-db): add rejection log and analytics dashboard", "branch": ""}, {"hash": "a8b1181", "date": "2026-03-28 14:15", "subject": "docs: add architecture specs and build documents for Jon", "branch": ""}, {"hash": "9e420f7", "date": "2026-03-28 14:15", "subject": "chore: add .obsidian to gitignore", "branch": ""}], "recent_files": [{"path": "_docs/sprints/S004-longitudinal-research/retro.md", "modified": "2026-03-31 12:34"}, {"path": "CLAUDE.md", "modified": "2026-03-31 12:34"}, {"path": "_docs/sprints/S004-longitudinal-research/plan.md", "modified": "2026-03-31 12:25"}, {"path": "_docs/sprints/SPRINT_LOG.md", "modified": "2026-03-31 12:20"}, {"path": "_docs/TESSERA_MASTER_VISION.md", "modified": "2026-03-31 11:59"}, {"path": "docs/strategic/Tessera_Master_Vision_Innovation.md", "modified": "2026-03-31 11:58"}, {"path": "docs/strategic/DOC2_Christa_Strategic_Reference.md", "modified": "2026-03-31 11:58"}, {"path": "docs/strategic/DOC1_Jon_Technical_Reference.md", "modified": "2026-03-31 11:58"}, {"path": "_docs/architecture/Late_Stage_Module_Handoff_Jon.md", "modified": "2026-03-30 12:45"}, {"path": "tests/test_late_stage.py", "modified": "2026-03-30 12:04"}, {"path": "pdp_scoring/fingerprint.py", "modified": "2026-03-30 11:58"}, {"path": "pdp_scoring/scoring.py", "modified": "2026-03-30 11:57"}, {"path": "pdp_scoring/late_stage.py", "modified": "2026-03-30 11:56"}, {"path": "pdp_scoring/pdp_types.py", "modified": "2026-03-30 11:55"}, {"path": "visualize_exemplar_db.py", "modified": "2026-03-29 13:56"}, {"path": "backpropagate_golds.py", "modified": "2026-03-29 13:33"}, {"path": "ui/src/components/organisms/StemInputPanel.tsx", "modified": "2026-03-29 13:15"}, {"path": "server.py", "modified": "2026-03-29 12:57"}, {"path": "ui/src/components/organisms/AssessmentView.tsx", "modified": "2026-03-29 12:17"}, {"path": "ui/src/api/index.ts", "modified": "2026-03-29 12:17"}], "christa_deliverables": [{"id": "C-1", "name": "Vector RAG pipeline (6 models in ChromaDB)", "target": "Phase 2.10", "status": "active"}, {"id": "C-2", "name": "Exemplar database (linguistic stage tables)", "target": "Phase 2.11", "status": "shipped", "note": "Expanded through 6.5 with 142 new exemplars \u2014 Mar 30"}, {"id": "C-3", "name": "PP Grid specification", "target": "Phase 2.8", "status": "queued"}, {"id": "C-4", "name": "Practice prescription spec", "target": "Phase 4.1-4.2", "status": "queued"}, {"id": "C-5", "name": "AHI/RPI specification", "target": "Phase 4.3-4.5", "status": "queued"}, {"id": "C-6", "name": "6-Agent Architecture + Revenue Projections doc", "target": "Phase 6", "status": "shipped", "note": "PDP_5Agent_Architecture_Revenue.md updated to v4.1 \u2014 Mar 31. Agent 6 spec added."}, {"id": "C-9", "name": "Developmental Arc Agent (Agent 6)", "target": "Phase 8", "status": "shipped", "note": "~/Desktop/PDP_Arc_Agent/ \u2014 5 modules, 2321 lines, git 42526c2, Mar 31"}, {"id": "C-7", "name": "Cognito Forms Pro plan setup", "target": "Phase 6.2", "status": "active", "note": "Quickstart guide ready, needs account setup"}, {"id": "C-8", "name": "Stripe T1/T2/T3/T4 payment links", "target": "Phase 6.7", "status": "active", "note": "Sprint 0 manual revenue \u2014 can start immediately"}], "jon_decisions": [{"id": "J-1", "question": "Feature extraction approach", "options": "LLM-only / Hybrid / RAG-assisted", "impact": "Phase 3.1 architecture", "resolved": null}, {"id": "J-2", "question": "Exemplar DB query method", "options": "File lookup / Vector search / Hybrid", "impact": "Phase 2 schema", "resolved": null}, {"id": "J-3", "question": "Scoring engine hosting", "options": "Railway / New infra / Serverless", "impact": "Deployment", "resolved": null}, {"id": "J-4", "question": "Kohlberg/Fowler PT weight", "options": "Code PT=4 vs Arch PT=3", "impact": "Weight accuracy", "resolved": "PT=4 confirmed (Selman 1980)"}, {"id": "J-5", "question": "Supabase instance deploy", "options": "Railway-hosted / Supabase Cloud", "impact": "Phase 6 infrastructure", "resolved": null}, {"id": "J-6", "question": "n8n Railway deploy timeline", "options": "Week 1 / Week 2", "impact": "Intake + Delivery agent activation", "resolved": null}, {"id": "J-7", "question": "Late-stage module integration", "options": "Merge to main / Feature branch", "impact": "Scoring pipeline v4.2", "resolved": null, "note": "Handoff doc delivered Mar 30"}], "christa_decisions": [{"id": "C-1", "question": "PP Grid specification", "needed": "Phase 2.8"}, {"id": "C-2", "question": "Practice-to-stage mapping", "needed": "Phase 4.1-4.2"}, {"id": "C-3", "question": "Three Pillars sequencing", "needed": "Phase 4.4"}, {"id": "C-4", "question": "Brand spec for DOCX templates", "needed": "Phase 5.1"}], "gold_standards": [{"name": "gold_01_strategist", "stage": "4.5", "use": "Strategist"}, {"name": "gold_02_pluralist", "stage": "4.0", "use": "Pluralist"}, {"name": "gold_03_expert", "stage": "3.0", "use": "Expert"}, {"name": "gold_04_strategist_jc", "stage": "4.5", "use": "Strategist"}, {"name": "gold_05_ms", "stage": "3.0", "use": "Expert (3.0-3.5 Transition)"}, {"name": "gold_06_5_0", "stage": "5.0", "use": "Construct-Aware"}, {"name": "gold_07_mp_construct_aware", "stage": "5.5", "use": "Transpersonal"}, {"name": "gold_08_nc_pluralist", "stage": "4.0", "use": "Pluralist"}, {"name": "gold_09_mb_strategist", "stage": "4.5", "use": "Strategist"}, {"name": "gold_10_test_pluralist", "stage": "4.0", "use": "Pluralist (4.0-4.5 Transition)"}], "exemplar_db": {"bands": [{"name": "fuzzy_3.0-3.5", "label": "3.0-3.5", "type": "transition", "stem_count": 10}, {"name": "fuzzy_3.5-4.0", "label": "3.5-4.0", "type": "transition", "stem_count": 13}, {"name": "fuzzy_4.0-4.5", "label": "4.0-4.5", "type": "transition", "stem_count": 13}, {"name": "fuzzy_4.5-5.0", "label": "4.5-5.0", "type": "transition", "stem_count": 12}, {"name": "fuzzy_5.0-5.5", "label": "5.0-5.5", "type": "transition", "stem_count": 13}, {"name": "fuzzy_5.5-6.0", "label": "5.5-6.0", "type": "transition", "stem_count": 13}, {"name": "fuzzy_6.0-6.5", "label": "6.0-6.5", "type": "transition", "stem_count": 13}, {"name": "stage_3.0", "label": "3.0", "type": "core", "stem_count": 13}, {"name": "stage_3.5", "label": "3.5", "type": "core", "stem_count": 13}, {"name": "stage_4.0", "label": "4.0", "type": "core", "stem_count": 13}, {"name": "stage_4.5", "label": "4.5", "type": "core", "stem_count": 13}, {"name": "stage_5.0", "label": "5.0", "type": "core", "stem_count": 13}, {"name": "stage_5.5", "label": "5.5", "type": "core", "stem_count": 13}, {"name": "stage_6.0", "label": "6.0", "type": "core", "stem_count": 13}, {"name": "stage_6.5", "label": "6.5", "type": "core", "stem_count": 13}], "total_bands": 15, "total_exemplars": 191}, "roadmap": [{"quarter": "Q1-Q2 2026", "items": ["6-Agent deploy (Intake + Delivery live by Day 7)", "Sprint 0 manual revenue (Stripe links)", "Arc Agent live Plaud run (118 recordings)", "Client portal", "6-month reassessment", "Meditation audio library", "Workshop materials"]}, {"quarter": "Q3-Q4 2026", "items": ["Multi-agent architecture", "Research DB integration", "State mapping module", "Enterprise licensing"]}, {"quarter": "2027+", "items": ["DaaS platform", "Practitioner certification", "Research validation", "International expansion"]}], "db_file_count": 269};
+// __DATA_INJECT_END__
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+/* ─── STATIC BUSINESS DATA ─────────────────────────────────────────────── */
+
+const REV = {
+  tiers: [
+    { id:'T1', name:'Assessment',          price:797,  delivery:'Scoring + all cross-model mapping + report. No calls. Automated delivery.', margin:92, cogs:65  },
+    { id:'T2', name:'Full Assessment',     price:1497, delivery:'Full scoring + cross-model mapping + practice prescription + report.',       margin:92, cogs:120 },
+    { id:'T3', name:'Research Participant',price:997,  delivery:'Everything in T2 at a discount. Requires longitudinal study enrollment (Wave 2, auto at delivery).', margin:90, cogs:95 },
+    { id:'T4', name:'Premium + Somatic',   price:2497, delivery:'Full package: research participation + somatic attunement processing with credentialed somatic processor.', margin:88, cogs:300 },
+  ],
+  months: [
+    { label:'Month 1', floor:11500, base:16367, ceiling:22000, clients:11, dates:'Apr 2-30' },
+    { label:'Month 2', floor:19500, base:27846, ceiling:37000, clients:19, dates:'May 1-30' },
+    { label:'Month 3', floor:36000, base:51904, ceiling:68000, clients:28, dates:'Jun 1-30' },
+  ],
+  weeks: [
+    { w:'W1 Apr 2-8',   n:2, mix:'1xT1, 1xT2',        rev:2294,  cum:2294  },
+    { w:'W2 Apr 9-15',  n:3, mix:'1xT1, 1xT3, 1xT4',  rev:4291,  cum:6585  },
+    { w:'W3 Apr 16-22', n:3, mix:'1xT2, 1xT3, 1xT4',  rev:4991,  cum:11576 },
+    { w:'W4 Apr 23-30', n:3, mix:'1xT1, 1xT2, 1xT4',  rev:4791,  cum:16367 },
+    { w:'W5 May 1-7',   n:4, mix:'1xT1,1xT2,1xT3,1xT4',rev:5788, cum:22155 },
+    { w:'W6 May 8-14',  n:5, mix:'1xT1,2xT2,1xT3,1xT4',rev:7285, cum:29440 },
+    { w:'W7 May 15-21', n:5, mix:'1xT2,1xT3,2xT4+ref', rev:7488, cum:36928 },
+    { w:'W8 May 22-30', n:5, mix:'1xT1,2xT2,1xT3,1xT4',rev:7285, cum:44213 },
+  ],
+  total:{ base:96117, floor:67000, ceiling:127000 },
+  unit:{ avg:1450, margin:91, fixed:2800, breakeven:3200 },
+  upside:[
+    'T4 practitioner signed Day 3: +$5K-$10K/month',
+    'One referral partner (coach/therapist): +$4K-$7.5K/month',
+    'CIIS institutional pilot (10 students): +$8K-$15K one-time',
+    'Preprint accepted: +15-20% conversion rate lift',
+  ],
+  downside:[
+    'T4 practitioner delayed: lose $15K+ in M1 ceiling',
+    'Jon Sprint 1 delayed past Day 10: manual delivery backlog builds',
+    'Christa bandwidth crunch (MIT + CIIS): conversion rate drops',
+    'Content quality inconsistent: Substack open rate drops, slow inbound ramp',
+  ],
+};
+
+const AGENTS = [
+  { id:1, name:'Intake Agent',    sprint:1, dates:'Apr 2-8',  status:'active',   framework:'Claude Agent SDK + Cognito + n8n', autonomy:'95%', owner:'Jon',    tools:6, summary:'Form validation, CRM record, payment link, confirmation, 48hr follow-up' },
+  { id:2, name:'Delivery Agent',  sprint:1, dates:'Apr 2-8',  status:'active',   framework:'Claude Agent SDK + Railway',      autonomy:'90%', owner:'Jon',    tools:9, summary:'Welcome sequence, scoring pipeline, QA routing, report delivery, call scheduling' },
+  { id:3, name:'CRM Agent',       sprint:2, dates:'Apr 9-19', status:'upcoming', framework:'Atomic CRM fork + Claude SDK',    autonomy:'90%', owner:'Jon',    tools:8, summary:'Single source of truth, pipeline health checks, weekly intelligence report' },
+  { id:4, name:'Pipeline Agent',  sprint:2, dates:'Apr 9-19', status:'upcoming', framework:'CrewAI Flows + n8n',              autonomy:'80%', owner:'Jon',    tools:5, summary:'Outreach batches, Calendly booking triggers, conversion tracking, referral loops' },
+  { id:5, name:'Content Agent',   sprint:3, dates:'Apr 20-29',status:'planned',  framework:'CrewAI + Buffer + Whisper',       autonomy:'85%', owner:'Jon',    tools:4, summary:'Research, draft, schedule Substack/LinkedIn; voice note to content pipeline' },
+  { id:6, name:'Arc Agent',       sprint:0, dates:'Mar 31',   status:'deployed', framework:'Python + Anthropic SDK + Chart.js',autonomy:'100%',owner:'Christa',tools:5, summary:'Plaud library scoring, developmental arc map, phenomenology emergence tracking' },
+];
+
+const SPRINTS = [
+  { id:'Sprint 1', dates:'Apr 2-8',   agents:'Intake + Delivery',  status:'active',   hrs:33, unlock:'Revenue active Day 7' },
+  { id:'Sprint 2', dates:'Apr 9-19',  agents:'CRM + Pipeline',     status:'upcoming', hrs:33, unlock:'Active pipeline generation' },
+  { id:'Sprint 3', dates:'Apr 20-29', agents:'Content',            status:'planned',  hrs:24, unlock:'Compounding inbound' },
+];
+
+const PIPELINE_STAGES = [
+  { name:'prospect',        owner:'Pipeline' },
+  { name:'contacted',       owner:'Pipeline' },
+  { name:'engaged',         owner:'Pipeline' },
+  { name:'call_scheduled',  owner:'Pipeline' },
+  { name:'intake_received', owner:'Intake'   },
+  { name:'payment_pending', owner:'Intake'   },
+  { name:'paid',            owner:'Intake'   },
+  { name:'onboarding',      owner:'Delivery' },
+  { name:'scoring_complete',owner:'Delivery' },
+  { name:'report_delivered',owner:'Delivery' },
+  { name:'call_1_complete', owner:'Delivery' },
+  { name:'delivered',       owner:'CRM'      },
+  { name:'client_active',   owner:'CRM'      },
+];
+
+const SCORING_PIPE = [
+  { n:1, name:'DSPy Extraction',     desc:'8 features per stem'              },
+  { n:2, name:'Channel Weighting',   desc:'TIER / SOCIAL / COMPLEXITY axes'  },
+  { n:3, name:'Exemplar Retrieval',  desc:'ChromaDB RAG, 191 exemplars'       },
+  { n:4, name:'3-Model Convergence', desc:'Commons + Kegan + Loevinger/CG'   },
+  { n:5, name:'PDP-STA Translation', desc:'0.1-step precision mapping'        },
+  { n:6, name:'7-Model Crosswalk',   desc:'Spiral, LT, Fowler, Kohlberg+'    },
+  { n:7, name:'PP + AHI Output',     desc:'Practice prescription + attachment'},
+];
+
+const HUMAN_TIME = [
+  { person:'Christa', task:'Outreach batch approval (Pipeline Agent queue)', time:'75 min/week' },
+  { person:'Christa', task:'QA review T2/T3 reports',                       time:'60-90 min/report' },
+  { person:'Christa', task:'Delivery calls',                                 time:'Variable' },
+  { person:'Christa', task:'Monday topic signal for Content Agent',          time:'15 min/week' },
+  { person:'Christa', task:'Content review + approval',                      time:'30 min/week' },
+  { person:'Christa', task:'CRM weekly report review',                       time:'15 min/week' },
+  { person:'Sherry',  task:'CRM anomaly review + exception handling',        time:'60 min/week' },
+  { person:'Sherry',  task:'OPS exception handling (payments, intakes)',      time:'30 min/week' },
+];
+
+const RESEARCH = {
+  papers:[
+    { n:1, title:'Framework + Methodology',                       venue:'arXiv cs.AI + PsyArXiv',           target:'Month 2 (Jun 2026)' },
+    { n:2, title:'Longitudinal Feature Trajectories',             venue:'Journal of Adult Development',      target:'Month 8-10 (Dec 2026)' },
+    { n:3, title:'Contemplative-Developmental Cross-Mapping',     venue:'Frontiers in Psychology',           target:'Month 18-24 (2027-28)' },
+  ],
+  funding:[
+    { source:'NIMH SBIR Phase I',     amount:'$300K',         deadline:'Sept 5, 2026',  status:'SAM.gov reg needed NOW', hot:true },
+    { source:'Templeton Foundation',  amount:'~$730K avg',    deadline:'Rolling OFI',   status:'After preprint', hot:false },
+    { source:'Mind and Life Institute',amount:'$25K-$150K',   deadline:'TBD',           status:'After preprint', hot:false },
+  ],
+  wave2_tiers:'T2, T3, T4',
+  wave2_trigger:'delivery_agent Tool 13',
+  wave2_tables:'research_participants, longitudinal_responses, scheduled_emails',
+};
+
+const DAAS = {
+  tiers: [
+    { id:'API-T1', name:'Scoring',                  price:10, desc:'7-model scoring output only. Raw stage assignment + confidence + crosswalk map.' },
+    { id:'API-T2', name:'Scoring + Practice',       price:20, desc:'7-model scoring + practice prescription matching. Stage-appropriate protocol output.' },
+    { id:'API-T3', name:'Scoring + Practice + Report', price:30, desc:'Full scoring + practice prescription + formatted report payload. Ready to render.' },
+    { id:'API-T4', name:'Full Stack + State Map UI', price:40, desc:'All above + interactive state mapping UI component. Embeddable in practitioner portals.' },
+  ],
+  mrr_at_10k: { low:5000, high:20000 },
+  target_launch:'Month 12+ (Apr 2027)',
+  customers:'Practitioners, coaches, researchers, enterprise',
+};
+
+const MILESTONES = [
+  { date:'Apr 2-8',    event:'Sprint 1: Intake + Delivery live. Revenue active.',     type:'revenue'  },
+  { date:'Apr 9-19',   event:'Sprint 2: CRM + Pipeline Agent. Active pipeline.',      type:'revenue'  },
+  { date:'Apr 20-29',  event:'Sprint 3: Content Agent. Compounding inbound.',         type:'revenue'  },
+  { date:'Apr 30',     event:'Month 1 target: $16,367 base / 11 clients',             type:'revenue'  },
+  { date:'May 30',     event:'Month 2 target: $27,846 base / 19 clients',             type:'revenue'  },
+  { date:'Jun 2026',   event:'Paper 1 submitted: arXiv cs.AI + PsyArXiv',             type:'research' },
+  { date:'Jun 30',     event:'90-day target: $96,117 base / 58+ clients',             type:'revenue'  },
+  { date:'Sept 5, 2026','event':'NIMH SBIR Phase I deadline: up to $300K',            type:'funding'  },
+  { date:'Dec 2026',   event:'Paper 2 submitted: Journal of Adult Development',       type:'research' },
+  { date:'2027+',      event:'DaaS API: $5K-$20K MRR at 10K calls/month',            type:'daas'     },
+  { date:'2027-28',    event:'Paper 3 + consciousness mapping layer (East-West)',      type:'research' },
+  { date:'2027-28',    event:'Exit: $50M-$200M acquisition (BetterUp, Hogan, PAR)',   type:'exit'     },
+];
+
+/* ─── SMALL UTILITIES ───────────────────────────────────────────────────── */
+
+function fmt(n)    { return Number(n).toLocaleString(); }
+function fmtD(n)   { return '$' + fmt(n); }
+
+function Tag({ t, children }) {
+  const cls = { g:'tg', b:'tb', a:'ta', r:'tr', v:'tv', c:'tc', gray:'tgray' }[t] || 'tgray';
+  return <span className={`tag ${cls}`}>{children}</span>;
+}
+
+function Dot({ t }) {
+  const cls = { g:'dg', b:'db', a:'da', gray:'dgray', v:'dv' }[t] || 'dgray';
+  return <span className={`dot ${cls}`} />;
+}
+
+function Bar({ pct, color }) {
+  return (
+    <div className="prog">
+      <div className="prog-bar" style={{ width: `${Math.min(100, pct || 0)}%`, background: color || 'var(--blue)' }} />
+    </div>
+  );
+}
+
+function StatusTag({ s }) {
+  const m = { shipped:['g','Shipped'], active:['b','Active'], upcoming:['a','Upcoming'], planned:['gray','Planned'], queued:['gray','Queued'], deployed:['v','Deployed'] };
+  const [t, lbl] = m[s] || ['gray', s];
+  return <Tag t={t}>{lbl}</Tag>;
+}
+
+/* ─── CHARTS ────────────────────────────────────────────────────────────── */
+
+function RevBarChart() {
+  const ref = useRef(null); const chart = useRef(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    if (chart.current) { chart.current.destroy(); chart.current = null; }
+    chart.current = new Chart(ref.current.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: REV.months.map(m => m.label),
+        datasets: [
+          { label:'Floor',   data: REV.months.map(m=>m.floor),   backgroundColor:'rgba(67,80,112,0.55)', borderColor:'rgba(67,80,112,0.9)', borderWidth:1, borderRadius:4 },
+          { label:'Base',    data: REV.months.map(m=>m.base),    backgroundColor:'rgba(59,130,246,0.6)', borderColor:'rgba(59,130,246,0.9)', borderWidth:1, borderRadius:4 },
+          { label:'Ceiling', data: REV.months.map(m=>m.ceiling), backgroundColor:'rgba(16,185,129,0.45)',borderColor:'rgba(16,185,129,0.8)', borderWidth:1, borderRadius:4 },
+        ],
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins: { legend:{ labels:{ color:'#7b90c4', font:{size:11} } }, tooltip:{ callbacks:{ label:c => ` ${c.dataset.label}: $${c.raw.toLocaleString()}` } } },
+        scales: {
+          x:{ ticks:{color:'#7b90c4'}, grid:{color:'rgba(26,40,64,0.7)'} },
+          y:{ ticks:{color:'#7b90c4', callback: v => '$'+(v/1000)+'K'}, grid:{color:'rgba(26,40,64,0.7)'} },
+        },
+      },
+    });
+    return () => { if (chart.current) { chart.current.destroy(); chart.current = null; } };
+  }, []);
+  return <div style={{height:220}}><canvas ref={ref} style={{height:'100%'}} /></div>;
+}
+
+function WeeklyLineChart() {
+  const ref = useRef(null); const chart = useRef(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    if (chart.current) { chart.current.destroy(); chart.current = null; }
+    chart.current = new Chart(ref.current.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: REV.weeks.map(w => w.w.split(' ')[0]),
+        datasets: [
+          { label:'Cumulative', data: REV.weeks.map(w=>w.cum), borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.08)', fill:true, tension:0.4, pointRadius:4, pointBackgroundColor:'#3b82f6' },
+          { label:'Weekly',     data: REV.weeks.map(w=>w.rev), borderColor:'#10b981', backgroundColor:'transparent', borderDash:[4,3], tension:0.4, pointRadius:3, pointBackgroundColor:'#10b981' },
+        ],
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins: { legend:{labels:{color:'#7b90c4',font:{size:11}}}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.raw.toLocaleString()}`}} },
+        scales: {
+          x:{ ticks:{color:'#7b90c4'}, grid:{color:'rgba(26,40,64,0.5)'} },
+          y:{ ticks:{color:'#7b90c4', callback: v => '$'+(v/1000).toFixed(0)+'K'}, grid:{color:'rgba(26,40,64,0.5)'} },
+        },
+      },
+    });
+    return () => { if (chart.current) { chart.current.destroy(); chart.current = null; } };
+  }, []);
+  return <div style={{height:210}}><canvas ref={ref} style={{height:'100%'}} /></div>;
+}
+
+function ExemplarChart({ data }) {
+  const ref = useRef(null); const chart = useRef(null);
+  useEffect(() => {
+    if (!ref.current || !data) return;
+    if (chart.current) { chart.current.destroy(); chart.current = null; }
+    const bands = data.bands || [];
+    chart.current = new Chart(ref.current.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: bands.map(b => b.label),
+        datasets: [{
+          label:'Exemplars',
+          data: bands.map(b => b.stem_count),
+          backgroundColor: bands.map(b => b.type==='transition' ? 'rgba(139,92,246,0.55)' : 'rgba(59,130,246,0.55)'),
+          borderColor: bands.map(b => b.type==='transition' ? 'rgba(139,92,246,0.9)' : 'rgba(59,130,246,0.9)'),
+          borderWidth:1, borderRadius:3,
+        }],
+      },
+      options: {
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins: { legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.raw} exemplars`}} },
+        scales: {
+          x:{ ticks:{color:'#7b90c4'}, grid:{color:'rgba(26,40,64,0.6)'} },
+          y:{ ticks:{color:'#7b90c4', font:{size:10}}, grid:{display:false} },
+        },
+      },
+    });
+    return () => { if (chart.current) { chart.current.destroy(); chart.current = null; } };
+  }, [data]);
+  return <div style={{height: Math.max(260, (data?.bands?.length||10)*22)}}><canvas ref={ref} style={{height:'100%'}} /></div>;
+}
+
+/* ─── TAB: OVERVIEW ─────────────────────────────────────────────────────── */
+
+function OverviewTab({ D }) {
+  const phases = D.phases || [];
+  const risks  = D.risks  || [];
+  const tests  = D.tests  || {};
+  const edb    = D.exemplar_db || {};
+  const shipped = phases.filter(p => p.status === 'shipped').length;
+  const highRisks = risks.filter(r => r.severity === 'high').length;
+
+  const kpis = [
+    { lbl:'90-Day Target', val:'$96K',       sub:'base projection',                  color:'#f59e0b' },
+    { lbl:'Month 1 Target',val:'$16,367',    sub:'Apr 2-30 · 11 clients',            color:'#3b82f6' },
+    { lbl:'Tests Passing', val:tests.passing||145, sub:`${tests.skipped||4} skip · ${tests.failed||0} fail`, color: (tests.failed||0)>0?'#f43f5e':'#10b981' },
+    { lbl:'Exemplars',     val:edb.total_exemplars||191, sub:`${edb.total_bands||15} stage bands`, color:'#8b5cf6' },
+    { lbl:'Phases Shipped',val:`${shipped}/${phases.length||8}`, sub:'phases complete', color:'#06b6d4' },
+    { lbl:'Active Risks',  val:highRisks,    sub:`${risks.length} total flagged`,     color:highRisks>2?'#f43f5e':'#f59e0b' },
+  ];
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:18}}>
+      {/* KPI Row */}
+      <div className="g6">
+        {kpis.map((k,i) => (
+          <div key={i} className="card" style={{padding:'18px 20px'}}>
+            <div className="label" style={{marginBottom:8}}>{k.lbl}</div>
+            <div style={{fontSize:26,fontWeight:800,color:k.color,lineHeight:1,marginBottom:4}}>{k.val}</div>
+            <div style={{fontSize:11,color:'var(--text-3)'}}>{k.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Sprint Banner */}
+      <div className="sprint-banner" style={{padding:'16px 22px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <Dot t="b" />
+          <span style={{fontWeight:700,fontSize:14}}>SPRINT 1 IN PROGRESS</span>
+          <Tag t="b">Apr 2-8</Tag>
+          <span style={{color:'var(--text-2)',fontSize:13,marginLeft:6}}>Intake Agent + Delivery Agent deploying now. Revenue unlocked on completion.</span>
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <Tag t="g">~33 hrs build</Tag>
+          <Tag t="b">Day 7 live</Tag>
+        </div>
+      </div>
+
+      {/* Main Grid */}
+      <div className="g64" style={{alignItems:'start'}}>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>90-Day Revenue Projection</div>
+          <RevBarChart />
+          <div style={{display:'flex',gap:24,marginTop:14,justifyContent:'center'}}>
+            {REV.months.map(m => (
+              <div key={m.label} style={{textAlign:'center'}}>
+                <div style={{fontSize:10,color:'var(--text-3)'}}>{m.label}</div>
+                <div style={{fontSize:17,fontWeight:800,color:'#3b82f6'}}>{fmtD(m.base)}</div>
+                <div style={{fontSize:10,color:'var(--text-3)'}}>{m.clients} clients</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Phase Progress</div>
+          <div style={{display:'flex',flexDirection:'column',gap:11}}>
+            {phases.map(p => (
+              <div key={p.id}>
+                <div style={{display:'flex',justifyContent:'space-between',marginBottom:4,gap:6}}>
+                  <span style={{fontSize:12,fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>Ph {p.id}: {p.name}</span>
+                  <div style={{display:'flex',gap:5,alignItems:'center',flexShrink:0}}>
+                    <span style={{fontSize:10,color:'var(--text-3)'}}>{p.progress}%</span>
+                    <StatusTag s={p.status} />
+                  </div>
+                </div>
+                <Bar pct={p.progress} color={p.status==='shipped'?'#10b981':p.status==='active'?'#3b82f6':'#435070'} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Row */}
+      <div className="g3">
+        {/* Risks */}
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Active Risks</div>
+          {risks.length === 0
+            ? <div style={{color:'var(--text-3)',fontSize:13}}>No risks flagged</div>
+            : risks.slice(0,4).map((r,i) => (
+              <div key={i} style={{display:'flex',gap:8,marginBottom:10,padding:'8px 10px',background:'rgba(255,255,255,0.02)',borderRadius:6}}>
+                <Tag t={r.severity==='high'?'r':r.severity==='medium'?'a':'gray'}>{r.severity}</Tag>
+                <div>
+                  <div style={{fontSize:12,fontWeight:600}}>{r.title}</div>
+                  <div style={{fontSize:11,color:'var(--text-3)',marginTop:2}}>{(r.detail||'').slice(0,88)}{r.detail?.length>88?'...':''}</div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        {/* Agent Summary */}
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>6-Agent Architecture</div>
+          {AGENTS.map(a => (
+            <div key={a.id} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'7px 0',borderBottom:'1px solid var(--border)'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <Dot t={a.status==='active'?'b':a.status==='deployed'?'v':a.status==='upcoming'?'a':'gray'} />
+                <span style={{fontSize:13,fontWeight:500}}>{a.name}</span>
+              </div>
+              <div style={{display:'flex',gap:6,alignItems:'center'}}>
+                <StatusTag s={a.status} />
+                <span style={{fontSize:10,color:'var(--text-3)'}}>{a.dates}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Recent Activity */}
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Recent Commits</div>
+          {(D.commits||[]).slice(0,7).map((c,i) => (
+            <div key={i} style={{marginBottom:9}}>
+              <div style={{fontSize:12,color:'var(--text)',lineHeight:1.4}}>{(c.subject||'').slice(0,58)}</div>
+              <div style={{fontSize:11,color:'var(--text-3)',marginTop:2,fontFamily:'monospace'}}>{c.hash} · {(c.date||'').slice(5,16)}</div>
+            </div>
+          ))}
+          {!(D.commits||[]).length && <div style={{color:'var(--text-3)',fontSize:13}}>No commits</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── TAB: REVENUE ──────────────────────────────────────────────────────── */
+
+function RevenueTab() {
+  const tierColor = { T1:'gray', T2:'b', T3:'c', T4:'v' };
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:18}}>
+
+      {/* Tier Cards */}
+      <div className="g4">
+        {REV.tiers.map(t => (
+          <div key={t.id} className="card" style={{padding:20}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
+              <Tag t={tierColor[t.id]}>{t.id}</Tag>
+              <span style={{fontSize:24,fontWeight:900,color:t.price?'var(--text)':'#f59e0b'}}>{t.price ? fmtD(t.price) : 'TBD'}</span>
+            </div>
+            <div style={{fontSize:13,fontWeight:700,marginBottom:5}}>{t.name}</div>
+            <div style={{fontSize:12,color:'var(--text-3)',marginBottom:12,lineHeight:1.4}}>{t.delivery}</div>
+            <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
+              <span style={{fontSize:11,color:'var(--text-3)'}}>Gross margin</span>
+              <span style={{fontSize:12,fontWeight:700,color:'#10b981'}}>{t.margin}%</span>
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between'}}>
+              <span style={{fontSize:11,color:'var(--text-3)'}}>COGS</span>
+              <span style={{fontSize:12,color:'var(--text-2)'}}>${t.cogs}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts */}
+      <div className="g55">
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Monthly Projections (Floor / Base / Ceiling)</div>
+          <RevBarChart />
+        </div>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Weekly Revenue (M1 + M2)</div>
+          <WeeklyLineChart />
+        </div>
+      </div>
+
+      {/* Weekly Table */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Month 1 Weekly Breakdown</div>
+        <div className="scroll-x">
+          <table className="dtable">
+            <thead><tr><th>Week</th><th>Clients</th><th>Mix</th><th>Weekly Revenue</th><th>Cumulative</th></tr></thead>
+            <tbody>
+              {REV.weeks.slice(0,4).map((w,i) => (
+                <tr key={i}>
+                  <td style={{fontWeight:600,color:'var(--text)'}}>{w.w}</td>
+                  <td>{w.n}</td>
+                  <td style={{fontFamily:'monospace',fontSize:12}}>{w.mix}</td>
+                  <td style={{color:'#60a5fa',fontWeight:600}}>{fmtD(w.rev)}</td>
+                  <td style={{color:'#10b981',fontWeight:700}}>{fmtD(w.cum)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Summary + Unit Economics */}
+      <div className="g2">
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>90-Day Summary</div>
+          <table className="dtable">
+            <thead><tr><th>Period</th><th>Floor</th><th>Base</th><th>Ceiling</th><th>Clients</th></tr></thead>
+            <tbody>
+              {REV.months.map(m => (
+                <tr key={m.label}>
+                  <td style={{fontWeight:600,color:'var(--text)'}}>{m.label} ({m.dates})</td>
+                  <td style={{color:'var(--text-3)'}}>{fmtD(m.floor)}</td>
+                  <td style={{color:'#60a5fa',fontWeight:700}}>{fmtD(m.base)}</td>
+                  <td style={{color:'#34d399'}}>{fmtD(m.ceiling)}</td>
+                  <td>{m.clients}</td>
+                </tr>
+              ))}
+              <tr>
+                <td style={{fontWeight:700,color:'var(--text)'}}>TOTAL 90 Days</td>
+                <td style={{color:'var(--text-3)',fontWeight:600}}>{fmtD(REV.total.floor)}</td>
+                <td style={{color:'#f59e0b',fontWeight:900,fontSize:15}}>{fmtD(REV.total.base)}</td>
+                <td style={{color:'#10b981',fontWeight:600}}>{fmtD(REV.total.ceiling)}</td>
+                <td style={{fontWeight:700}}>58+</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Unit Economics</div>
+          <table className="dtable">
+            <tbody>
+              <tr><td>Avg revenue / client (blended)</td><td style={{fontWeight:700,color:'#60a5fa'}}>{fmtD(REV.unit.avg)}</td></tr>
+              <tr><td>Blended gross margin</td><td style={{fontWeight:700,color:'#10b981'}}>{REV.unit.margin}%</td></tr>
+              <tr><td>Monthly fixed costs</td><td style={{color:'var(--text-2)'}}>{fmtD(REV.unit.fixed)}</td></tr>
+              <tr><td>Monthly break-even</td><td style={{fontWeight:700,color:'#fbbf24'}}>{fmtD(REV.unit.breakeven)}</td></tr>
+              <tr><td style={{color:'#10b981',fontWeight:600}}>Break-even timing</td><td style={{color:'#10b981',fontWeight:800}}>Week 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Upside / Downside */}
+      <div className="g2">
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:12}}>Upside Triggers</div>
+          {REV.upside.map((u,i) => (
+            <div key={i} style={{display:'flex',gap:10,marginBottom:9,alignItems:'flex-start'}}>
+              <span style={{color:'#10b981',fontWeight:900,marginTop:1,flexShrink:0}}>+</span>
+              <span style={{fontSize:13,color:'var(--text-2)',lineHeight:1.4}}>{u}</span>
+            </div>
+          ))}
+        </div>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:12}}>Downside Triggers</div>
+          {REV.downside.map((d,i) => (
+            <div key={i} style={{display:'flex',gap:10,marginBottom:9,alignItems:'flex-start'}}>
+              <span style={{color:'#f43f5e',fontWeight:900,marginTop:1,flexShrink:0}}>↓</span>
+              <span style={{fontSize:13,color:'var(--text-2)',lineHeight:1.4}}>{d}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* DaaS API Pricing */}
+      <div className="card" style={{padding:20}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <div className="sec">DaaS API Pricing (Month 12+)</div>
+          <div style={{display:'flex',gap:8}}>
+            <Tag t="v">Apr 2027 target launch</Tag>
+            <Tag t="gray">${fmt(DAAS.mrr_at_10k.low)}–${fmt(DAAS.mrr_at_10k.high)} MRR at 10K calls/mo</Tag>
+          </div>
+        </div>
+        <div className="g4">
+          {DAAS.tiers.map(t => (
+            <div key={t.id} style={{padding:18,borderRadius:10,background:'rgba(139,92,246,0.07)',border:'1px solid rgba(139,92,246,0.22)'}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
+                <Tag t="v">{t.id}</Tag>
+                <span style={{fontSize:26,fontWeight:900,color:'#a78bfa'}}>${t.price}<span style={{fontSize:12,fontWeight:500,color:'var(--text-3)'}}>/call</span></span>
+              </div>
+              <div style={{fontSize:13,fontWeight:700,marginBottom:6}}>{t.name}</div>
+              <div style={{fontSize:12,color:'var(--text-3)',lineHeight:1.5}}>{t.desc}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:14,padding:'10px 14px',background:'rgba(139,92,246,0.06)',borderRadius:6,border:'1px solid rgba(139,92,246,0.18)'}}>
+          <span style={{fontSize:12,color:'#a78bfa'}}>Customers: {DAAS.customers}. Dataset moat: 500+ scored clients by Month 36 cannot be replicated externally.</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── TAB: 6-AGENT ROLLOUT ──────────────────────────────────────────────── */
+
+function AgentTab() {
+  const sBg = {
+    active:   { bg:'rgba(59,130,246,0.08)',  border:'rgba(59,130,246,0.35)',  color:'#60a5fa' },
+    upcoming: { bg:'rgba(245,158,11,0.07)',  border:'rgba(245,158,11,0.3)',   color:'#fbbf24' },
+    planned:  { bg:'rgba(67,80,112,0.07)',   border:'rgba(67,80,112,0.2)',    color:'var(--text-3)' },
+    deployed: { bg:'rgba(139,92,246,0.09)',  border:'rgba(139,92,246,0.35)', color:'#a78bfa' },
+  };
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:18}}>
+
+      {/* Banner */}
+      <div className="sprint-banner" style={{padding:'20px 24px'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:6}}>
+              <Dot t="b" />
+              <span style={{fontWeight:900,fontSize:18,letterSpacing:'-0.01em'}}>SPRINT 1 IN PROGRESS</span>
+              <Tag t="b">Apr 2-8</Tag>
+            </div>
+            <div style={{color:'var(--text-2)',fontSize:13}}>Intake Agent + Delivery Agent. 33 hours build. Revenue unlocked Day 7.</div>
+          </div>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontSize:11,color:'var(--text-3)'}}>90-day base target</div>
+            <div style={{fontSize:30,fontWeight:900,color:'#f59e0b'}}>$96,117</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sprint Timeline */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:16}}>Sprint Timeline</div>
+        <div className="g3">
+          {SPRINTS.map(s => {
+            const st = sBg[s.status];
+            return (
+              <div key={s.id} style={{padding:16,borderRadius:10,background:st.bg,border:`1px solid ${st.border}`}}>
+                <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
+                  <span style={{fontWeight:800,fontSize:14,color:st.color}}>{s.id}</span>
+                  <StatusTag s={s.status} />
+                </div>
+                <div style={{fontSize:14,fontWeight:600,marginBottom:4}}>{s.dates}</div>
+                <div style={{fontSize:12,color:'var(--text-2)',marginBottom:6}}>Agents: {s.agents}</div>
+                <div style={{fontSize:11,color:'var(--text-3)'}}>{s.hrs} hrs · {s.unlock}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Agent Cards */}
+      <div className="g3">
+        {AGENTS.map(a => {
+          const st = sBg[a.status];
+          return (
+            <div key={a.id} style={{padding:18,borderRadius:12,background:st.bg,border:`1px solid ${st.border}`}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
+                <div>
+                  <div style={{fontSize:11,fontWeight:700,color:st.color,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:2}}>Agent {a.id}</div>
+                  <div style={{fontSize:15,fontWeight:700}}>{a.name}</div>
+                </div>
+                <StatusTag s={a.status} />
+              </div>
+              <div style={{fontSize:12,color:'var(--text-2)',marginBottom:10,lineHeight:1.45}}>{a.summary}</div>
+              <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:8}}>
+                <Tag t="gray">{a.framework.split('+')[0].trim()}</Tag>
+                <Tag t="gray">{a.autonomy} auto</Tag>
+                <Tag t="gray">{a.tools} tools</Tag>
+              </div>
+              <div style={{fontSize:11,color:'var(--text-3)'}}>Owner: {a.owner} · {a.dates}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Architecture Diagram */}
+      <div className="card" style={{padding:24}}>
+        <div className="sec" style={{marginBottom:20}}>Architecture Flow</div>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10}}>
+
+          {/* CRM at top */}
+          <div style={{width:260,padding:'12px 16px',borderRadius:8,background:'rgba(245,158,11,0.08)',border:'1px solid rgba(245,158,11,0.3)',textAlign:'center'}}>
+            <div style={{fontSize:12,fontWeight:700,color:'#fbbf24'}}>CRM AGENT</div>
+            <div style={{fontSize:11,color:'var(--text-3)'}}>Single source of truth · reads/writes all agents</div>
+            <div style={{marginTop:4}}><Tag t="a">Sprint 2 · Apr 9</Tag></div>
+          </div>
+          <div style={{color:'var(--text-3)',fontSize:12}}>state sync ↕</div>
+
+          {/* Three parallel */}
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:14,width:'100%',maxWidth:700}}>
+            {[
+              { name:'CONTENT AGENT', sub:'Content + reach', s:'planned', c:'#435070' },
+              { name:'PIPELINE AGENT', sub:'Outreach + conversion', s:'upcoming', c:'#fbbf24' },
+              { name:'DELIVERY AGENT', sub:'Client journey', s:'active', c:'#60a5fa' },
+            ].map((b,i) => (
+              <div key={i} style={{padding:'12px 14px',borderRadius:8,background:sBg[b.s].bg,border:`1px solid ${sBg[b.s].border}`,textAlign:'center'}}>
+                <div style={{fontSize:12,fontWeight:700,color:b.c}}>{b.name}</div>
+                <div style={{fontSize:11,color:'var(--text-3)',marginTop:3}}>{b.sub}</div>
+                <div style={{marginTop:6}}><StatusTag s={b.s} /></div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{color:'var(--text-3)',fontSize:12}}>prospect books</div>
+          <div style={{fontSize:18,color:'var(--text-3)'}}>↓</div>
+
+          {/* Intake */}
+          <div style={{width:260,padding:'12px 16px',borderRadius:8,background:'rgba(59,130,246,0.1)',border:'1px solid rgba(59,130,246,0.4)',textAlign:'center'}}>
+            <div style={{fontSize:12,fontWeight:700,color:'#60a5fa'}}>INTAKE AGENT</div>
+            <div style={{fontSize:11,color:'var(--text-3)',marginBottom:5}}>Form validation → CRM → payment link</div>
+            <Tag t="b">Sprint 1 · THIS WEEK</Tag>
+          </div>
+
+          <div style={{marginTop:6,padding:'12px 20px',borderRadius:8,background:'rgba(139,92,246,0.08)',border:'1px solid rgba(139,92,246,0.3)',textAlign:'center',maxWidth:500}}>
+            <div style={{fontSize:12,fontWeight:700,color:'#a78bfa'}}>ARC AGENT (Standalone)</div>
+            <div style={{fontSize:11,color:'var(--text-3)'}}>Plaud library → PDP scoring → interactive longitudinal map · DEPLOYED Mar 31</div>
+          </div>
+        </div>
+      </div>
+
+      {/* State Flow + Human Time */}
+      <div className="g2">
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Client State Machine</div>
+          <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+            {PIPELINE_STAGES.map((s,i) => {
+              const color = s.owner==='Pipeline'?'#fbbf24':s.owner==='Intake'?'#60a5fa':s.owner==='Delivery'?'#22d3ee':'#34d399';
+              const bg    = s.owner==='Pipeline'?'rgba(245,158,11,0.1)':s.owner==='Intake'?'rgba(59,130,246,0.1)':s.owner==='Delivery'?'rgba(6,182,212,0.1)':'rgba(16,185,129,0.1)';
+              const bd    = s.owner==='Pipeline'?'rgba(245,158,11,0.2)':s.owner==='Intake'?'rgba(59,130,246,0.2)':s.owner==='Delivery'?'rgba(6,182,212,0.2)':'rgba(16,185,129,0.2)';
+              return (
+                <React.Fragment key={i}>
+                  <span style={{padding:'3px 9px',borderRadius:5,fontSize:11,fontWeight:500,background:bg,color,border:`1px solid ${bd}`}}>{s.name}</span>
+                  {i < PIPELINE_STAGES.length-1 && <span style={{color:'var(--text-3)',fontSize:10,alignSelf:'center'}}>→</span>}
+                </React.Fragment>
+              );
+            })}
+          </div>
+          <div style={{marginTop:12,display:'flex',gap:16,flexWrap:'wrap'}}>
+            <span style={{fontSize:11,color:'#fbbf24'}}>● Pipeline</span>
+            <span style={{fontSize:11,color:'#60a5fa'}}>● Intake</span>
+            <span style={{fontSize:11,color:'#22d3ee'}}>● Delivery</span>
+            <span style={{fontSize:11,color:'#34d399'}}>● CRM</span>
+          </div>
+        </div>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Human Time (All Agents Running)</div>
+          <table className="dtable">
+            <thead><tr><th>Person</th><th>Activity</th><th>Time</th></tr></thead>
+            <tbody>
+              {HUMAN_TIME.map((h,i) => (
+                <tr key={i}>
+                  <td style={{fontWeight:600,color:h.person==='Christa'?'#60a5fa':'#a78bfa'}}>{h.person}</td>
+                  <td style={{fontSize:12}}>{h.task}</td>
+                  <td style={{fontFamily:'monospace',fontSize:12,color:'#10b981',whiteSpace:'nowrap'}}>{h.time}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{marginTop:12,padding:'10px 12px',background:'rgba(16,185,129,0.06)',borderRadius:6,border:'1px solid rgba(16,185,129,0.2)'}}>
+            <span style={{fontSize:12,color:'#34d399',fontWeight:600}}>Christa non-call work: ~3 hrs/week. Sherry: ~1.5 hrs/week. Everything else is autonomous.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── TAB: SCORING ENGINE ───────────────────────────────────────────────── */
+
+function ScoringTab({ D }) {
+  const { git={}, tests={}, phases=[], changelog=[], commits=[], recent_files=[], gold_standards=[], exemplar_db } = D;
+  const [expanded, setExpanded] = useState(null);
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:18}}>
+
+      {/* Status Pills */}
+      <div className="g4">
+        {[
+          { lbl:'Engine Version', val:`v${git.engine_version||'?'}`, color:'#3b82f6' },
+          { lbl:'Tests', val:`${tests.passing||0} pass`, sub:`${tests.failed||0} fail · ${tests.skipped||0} skip`, color:(tests.failed||0)>0?'#f43f5e':'#10b981' },
+          { lbl:'Branch', val:git.current_branch||'unknown', color:'#8b5cf6', mono:true },
+          { lbl:'Uncommitted', val:git.uncommitted_files||0, sub:'files', color:(git.uncommitted_files||0)>0?'#f59e0b':'#10b981' },
+        ].map((s,i) => (
+          <div key={i} className="card" style={{padding:'16px 20px'}}>
+            <div className="label" style={{marginBottom:6}}>{s.lbl}</div>
+            <div style={{fontSize:21,fontWeight:800,color:s.color,fontFamily:s.mono?'monospace':undefined}}>{s.val}</div>
+            {s.sub && <div style={{fontSize:11,color:'var(--text-3)'}}>{s.sub}</div>}
+          </div>
+        ))}
+      </div>
+
+      {/* Scoring Pipeline */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>7-Layer Scoring Pipeline</div>
+        <div style={{display:'flex',gap:6,overflowX:'auto',paddingBottom:4}}>
+          {SCORING_PIPE.map((s,i) => (
+            <React.Fragment key={i}>
+              <div style={{flex:'1 0 120px',padding:'12px 10px',borderRadius:8,background:'var(--bg-card2)',border:'1px solid var(--border-hi)',textAlign:'center'}}>
+                <div style={{fontSize:10,fontWeight:700,color:'var(--text-3)',marginBottom:3}}>Step {s.n}</div>
+                <div style={{fontSize:12,fontWeight:700,color:'#60a5fa',marginBottom:3,lineHeight:1.3}}>{s.name}</div>
+                <div style={{fontSize:10,color:'var(--text-3)',lineHeight:1.3}}>{s.desc}</div>
+              </div>
+              {i < SCORING_PIPE.length-1 && <div style={{display:'flex',alignItems:'center',color:'var(--text-3)',fontSize:13,flexShrink:0}}>→</div>}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* Phases */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Build Phases</div>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          {phases.map(p => (
+            <div key={p.id}>
+              <div
+                style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',padding:'10px 12px',borderRadius:8,background:'rgba(255,255,255,0.018)',border:'1px solid var(--border)'}}
+                onClick={() => setExpanded(expanded===p.id?null:p.id)}
+              >
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <StatusTag s={p.status} />
+                  <span style={{fontWeight:600,fontSize:13}}>Phase {p.id}: {p.name}</span>
+                  <span style={{fontSize:11,color:'var(--text-3)'}}>{p.estimate}</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <div style={{width:90}}><Bar pct={p.progress} color={p.status==='shipped'?'#10b981':'#3b82f6'} /></div>
+                  <span style={{fontSize:11,color:'var(--text-3)',width:32,textAlign:'right'}}>{p.progress}%</span>
+                  <span style={{color:'var(--text-3)',fontSize:11}}>{expanded===p.id?'▲':'▼'}</span>
+                </div>
+              </div>
+              {expanded === p.id && (p.tasks||[]).length > 0 && (
+                <div style={{marginLeft:12,marginTop:4,borderLeft:'2px solid var(--border-hi)',paddingLeft:12}}>
+                  {(p.tasks||[]).map(t => (
+                    <div key={t.id} style={{display:'flex',alignItems:'flex-start',gap:8,padding:'6px 0',borderBottom:'1px solid rgba(26,40,64,0.5)'}}>
+                      <StatusTag s={t.status} />
+                      <div>
+                        <span style={{fontSize:12,color:'var(--text)'}}>{t.id} · {t.name}</span>
+                        {t.note && <div style={{fontSize:11,color:'var(--text-3)',marginTop:2}}>{t.note}</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Exemplar DB + Gold Standards */}
+      <div className="g55">
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:12}}>
+            Exemplar Database
+            {exemplar_db && <span style={{marginLeft:10,fontWeight:400,color:'#a78bfa',fontSize:13}}>{exemplar_db.total_exemplars} exemplars across {exemplar_db.total_bands} bands</span>}
+          </div>
+          {exemplar_db ? <ExemplarChart data={exemplar_db} /> : <div style={{color:'var(--text-3)',padding:20}}>No exemplar DB data found</div>}
+          <div style={{marginTop:10,display:'flex',gap:16}}>
+            <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--text-3)'}}><span style={{width:10,height:10,borderRadius:2,background:'rgba(59,130,246,0.6)',display:'inline-block'}}></span>Core</div>
+            <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--text-3)'}}><span style={{width:10,height:10,borderRadius:2,background:'rgba(139,92,246,0.6)',display:'inline-block'}}></span>Transition</div>
+          </div>
+        </div>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:12}}>Gold Standards ({gold_standards.length})</div>
+          <table className="dtable">
+            <thead><tr><th>ID</th><th>Stage</th><th>Use</th></tr></thead>
+            <tbody>
+              {gold_standards.map((g,i) => (
+                <tr key={i}>
+                  <td style={{fontFamily:'monospace',fontSize:11}}>{g.name}</td>
+                  <td><Tag t="v">{g.stage}</Tag></td>
+                  <td style={{fontSize:11}}>{g.use}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Changelog + Recent Files */}
+      <div className="g55">
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Changelog</div>
+          {(changelog||[]).slice(0,3).map((e,i) => (
+            <div key={i} style={{marginBottom:12,padding:'10px 12px',background:'rgba(255,255,255,0.018)',borderRadius:6,border:'1px solid var(--border)'}}>
+              <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+                <span style={{fontWeight:700,color:'#60a5fa'}}>{e.version}</span>
+                <span style={{fontSize:11,color:'var(--text-3)'}}>{e.date}</span>
+              </div>
+              {Object.entries(e.sections||{}).slice(0,2).map(([sec,items]) => (
+                <div key={sec} style={{marginBottom:3}}>
+                  <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',color:'var(--text-3)',marginBottom:2}}>{sec}</div>
+                  {(items||[]).slice(0,2).map((item,j) => (
+                    <div key={j} style={{fontSize:11,color:'var(--text-2)',marginLeft:8,lineHeight:1.4}}>{item.slice(0,90)}</div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:14}}>Recent File Changes</div>
+          {(recent_files||[]).slice(0,14).map((f,i) => (
+            <div key={i} style={{display:'flex',justifyContent:'space-between',marginBottom:5}}>
+              <span style={{fontSize:11,fontFamily:'monospace',color:'var(--text-2)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.path?.slice(-52)}</span>
+              <span style={{fontSize:10,color:'var(--text-3)',flexShrink:0,marginLeft:8}}>{(f.modified||'').slice(5)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── TAB: RESEARCH & L2 ────────────────────────────────────────────────── */
+
+function ResearchTab() {
+  const stages = [
+    { s:'4.5', label:'Apr 2025', pct:0   },
+    { s:'5.0', label:'',         pct:33  },
+    { s:'5.5', label:'',         pct:66  },
+    { s:'6.0', label:'Apr 2026', pct:100 },
+  ];
+  const sc = { '4.5':'#f59e0b', '5.0':'#3b82f6', '5.5':'#8b5cf6', '6.0':'#06b6d4' };
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:18}}>
+
+      {/* Christa's Arc */}
+      <div className="card" style={{padding:24}}>
+        <div className="sec" style={{marginBottom:16}}>Christa's Developmental Arc (N=1 Longitudinal)</div>
+        <div style={{display:'flex',alignItems:'center',gap:28,marginBottom:20}}>
+          {/* Track */}
+          <div style={{flex:1,position:'relative'}}>
+            <div style={{position:'relative',height:50,marginBottom:10}}>
+              <div style={{position:'absolute',top:'50%',left:0,right:0,height:2,background:'linear-gradient(90deg,#f59e0b,#3b82f6,#8b5cf6,#06b6d4)',transform:'translateY(-50%)',borderRadius:2}} />
+              {stages.map((st,i) => (
+                <div key={i} style={{position:'absolute',left:`${st.pct}%`,top:'50%',transform:'translate(-50%,-50%)',display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+                  <div style={{width:st.s==='6.0'?20:12,height:st.s==='6.0'?20:12,borderRadius:'50%',background:sc[st.s],boxShadow:st.s==='6.0'?`0 0 14px ${sc[st.s]}`:`0 0 6px ${sc[st.s]}`}} />
+                </div>
+              ))}
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between'}}>
+              {stages.map((st,i) => (
+                <div key={i} style={{textAlign:'center',width:50}}>
+                  <div style={{fontSize:15,fontWeight:800,color:sc[st.s]}}>{st.s}</div>
+                  <div style={{fontSize:10,color:'var(--text-3)'}}>{st.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{textAlign:'right',flexShrink:0}}>
+            <div style={{fontSize:11,color:'var(--text-3)',marginBottom:4}}>Current Stage</div>
+            <div style={{fontSize:44,fontWeight:900,color:'#06b6d4',lineHeight:1}}>6.0</div>
+            <div style={{fontSize:12,color:'var(--text-3)',marginTop:4}}>119 recordings scored</div>
+          </div>
+        </div>
+        <div className="g4">
+          {[
+            {lbl:'Baseline',       val:'4.5', sub:'April 2025'},
+            {lbl:'Current Stage',  val:'6.0', sub:'April 2026, confirmed'},
+            {lbl:'Recordings',     val:119,   sub:'Plaud voice library'},
+            {lbl:'Arc Duration',   val:'12 mo', sub:'feature sequence: PT+MM lead'},
+          ].map((k,i) => (
+            <div key={i} className="card2" style={{padding:'12px 14px'}}>
+              <div className="label" style={{marginBottom:4}}>{k.lbl}</div>
+              <div style={{fontSize:20,fontWeight:800,color:'#06b6d4'}}>{k.val}</div>
+              <div style={{fontSize:11,color:'var(--text-3)'}}>{k.sub}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Arc Agent + Wave 2 */}
+      <div className="g2">
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:12}}>Arc Agent</div>
+          <div style={{display:'flex',gap:8,marginBottom:14}}>
+            <Tag t="v">Deployed Mar 31</Tag>
+            <Tag t="a">Needs Plaud token</Tag>
+          </div>
+          {[
+            {lbl:'Location',      val:'~/Desktop/PDP_Arc_Agent/', mono:true},
+            {lbl:'Recordings',    val:'118 in library'},
+            {lbl:'Est. runtime',  val:'18-22 minutes'},
+            {lbl:'API cost',      val:'~$0.18 per full run'},
+            {lbl:'Output',        val:'5-tab interactive HTML arc map'},
+            {lbl:'Research use',  val:'Paper 2 + Paper 3 primary data'},
+          ].map((r,i) => (
+            <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'6px 0',borderBottom:'1px solid rgba(26,40,64,0.5)'}}>
+              <span style={{fontSize:12,color:'var(--text-3)'}}>{r.lbl}</span>
+              <span style={{fontSize:12,color:'var(--text)',fontFamily:r.mono?'monospace':undefined}}>{r.val}</span>
+            </div>
+          ))}
+          <div style={{marginTop:14,padding:'10px 12px',background:'rgba(139,92,246,0.08)',borderRadius:6,border:'1px solid rgba(139,92,246,0.2)'}}>
+            <div style={{fontSize:12,color:'#a78bfa',lineHeight:1.5}}>To run: get Bearer token from web.plaud.ai DevTools. Then: <span style={{fontFamily:'monospace'}}>python plaud_arc_agent.py --token YOUR_TOKEN --open</span></div>
+          </div>
+        </div>
+        <div className="card" style={{padding:20}}>
+          <div className="sec" style={{marginBottom:12}}>Longitudinal Wave 2</div>
+          <div style={{display:'flex',gap:8,marginBottom:14}}>
+            <Tag t="g">Infrastructure Ready</Tag>
+            <Tag t="b">Auto-enrollment</Tag>
+          </div>
+          {[
+            {lbl:'Eligible tiers',       val:RESEARCH.wave2_tiers},
+            {lbl:'Participant codes',    val:'W2-XXXXXX'},
+            {lbl:'Enrollment trigger',   val:RESEARCH.wave2_trigger, mono:true},
+            {lbl:'DB tables',            val:RESEARCH.wave2_tables},
+            {lbl:'Emails per participant',val:'11 scheduled'},
+            {lbl:'Migration file',       val:'supabase/004_longitudinal_research.sql', mono:true},
+            {lbl:'Target paper',         val:'Journal of Adult Development'},
+          ].map((r,i) => (
+            <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'6px 0',borderBottom:'1px solid rgba(26,40,64,0.5)',gap:8}}>
+              <span style={{fontSize:12,color:'var(--text-3)',flexShrink:0}}>{r.lbl}</span>
+              <span style={{fontSize:11,color:'var(--text)',fontFamily:r.mono?'monospace':undefined,textAlign:'right'}}>{r.val}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Research Papers */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:16}}>Research Program: 3 Papers</div>
+        <div className="g3">
+          {RESEARCH.papers.map(p => (
+            <div key={p.n} style={{padding:16,borderRadius:8,background:'rgba(6,182,212,0.06)',border:'1px solid rgba(6,182,212,0.2)'}}>
+              <div style={{fontSize:11,fontWeight:700,color:'#22d3ee',textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:6}}>Paper {p.n}</div>
+              <div style={{fontSize:13,fontWeight:700,marginBottom:6,lineHeight:1.4}}>{p.title}</div>
+              <div style={{fontSize:12,color:'#22d3ee',marginBottom:6}}>{p.venue}</div>
+              <div style={{fontSize:11,color:'var(--text-3)'}}>Target: {p.target}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Funding Path */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Non-Dilutive Funding Path (Total: $1.1M-$1.3M)</div>
+        <table className="dtable">
+          <thead><tr><th>Source</th><th>Amount</th><th>Deadline</th><th>Status</th></tr></thead>
+          <tbody>
+            {RESEARCH.funding.map((f,i) => (
+              <tr key={i}>
+                <td style={{fontWeight:600,color:'var(--text)'}}>{f.source}</td>
+                <td style={{color:'#fbbf24',fontWeight:700}}>{f.amount}</td>
+                <td style={{color:'var(--text-2)'}}>{f.deadline}</td>
+                <td><Tag t={f.hot?'r':'a'}>{f.status}</Tag></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* ─── TAB: DELIVERABLES ─────────────────────────────────────────────────── */
+
+function DeliverablesTab({ D }) {
+  const { christa_deliverables=[], jon_decisions=[], christa_decisions=[] } = D;
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:18}}>
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Christa Deliverables</div>
+        <table className="dtable">
+          <thead><tr><th>ID</th><th>Deliverable</th><th>Target</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody>
+            {christa_deliverables.map(d => (
+              <tr key={d.id}>
+                <td style={{fontFamily:'monospace',fontSize:11}}>{d.id}</td>
+                <td style={{fontWeight:600,color:'var(--text)',fontSize:12}}>{d.name}</td>
+                <td style={{fontSize:12}}>{d.target}</td>
+                <td><StatusTag s={d.status} /></td>
+                <td style={{fontSize:11,color:'var(--text-3)',maxWidth:260}}>{d.note||''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Jon Decisions</div>
+        <table className="dtable">
+          <thead><tr><th>ID</th><th>Question</th><th>Options</th><th>Impact</th><th>Resolved</th></tr></thead>
+          <tbody>
+            {jon_decisions.map(d => (
+              <tr key={d.id}>
+                <td style={{fontFamily:'monospace',fontSize:11}}>{d.id}</td>
+                <td style={{fontWeight:600,color:'var(--text)',fontSize:12}}>{d.question}</td>
+                <td style={{fontSize:11,color:'var(--text-3)'}}>{d.options}</td>
+                <td style={{fontSize:11}}>{d.impact}</td>
+                <td>{d.resolved ? <div><Tag t="g">Done</Tag><div style={{fontSize:10,color:'var(--text-3)',marginTop:2}}>{d.resolved}</div></div> : <Tag t="a">Open</Tag>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Christa Decisions Needed</div>
+        <div className="g2">
+          {christa_decisions.map((d,i) => (
+            <div key={i} style={{padding:14,borderRadius:8,background:'rgba(245,158,11,0.07)',border:'1px solid rgba(245,158,11,0.22)'}}>
+              <div style={{fontSize:11,fontWeight:700,color:'#fbbf24',marginBottom:4}}>{d.id}</div>
+              <div style={{fontSize:13,fontWeight:600,marginBottom:4}}>{d.question}</div>
+              <div style={{fontSize:11,color:'var(--text-3)'}}>Needed for: {d.needed}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── TAB: ROADMAP ──────────────────────────────────────────────────────── */
+
+function RoadmapTab({ D }) {
+  const { roadmap=[] } = D;
+  const typeStyle = {
+    revenue:  { color:'#60a5fa', bg:'rgba(59,130,246,0.08)',  border:'rgba(59,130,246,0.2)'  },
+    research: { color:'#22d3ee', bg:'rgba(6,182,212,0.08)',   border:'rgba(6,182,212,0.2)'   },
+    funding:  { color:'#fbbf24', bg:'rgba(245,158,11,0.08)',  border:'rgba(245,158,11,0.2)'  },
+    daas:     { color:'#a78bfa', bg:'rgba(139,92,246,0.08)',  border:'rgba(139,92,246,0.2)'  },
+    exit:     { color:'#fb7185', bg:'rgba(244,63,94,0.08)',   border:'rgba(244,63,94,0.2)'   },
+  };
+  const typeTag = { revenue:'b', research:'c', funding:'a', daas:'v', exit:'r' };
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:18}}>
+      {/* Timeline */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:18}}>Milestone Timeline</div>
+        {MILESTONES.map((m,i) => {
+          const ts = typeStyle[m.type];
+          return (
+            <div key={i} style={{display:'flex',gap:14,marginBottom:12,alignItems:'flex-start'}}>
+              <div style={{width:140,flexShrink:0,fontSize:12,color:'var(--text-3)',fontWeight:600,paddingTop:6}}>{m.date}</div>
+              <div style={{width:3,flexShrink:0,alignSelf:'stretch',background:ts.color,borderRadius:2}} />
+              <div style={{flex:1,padding:'8px 12px',borderRadius:6,background:ts.bg,border:`1px solid ${ts.border}`}}>
+                <span style={{fontSize:13,color:'var(--text)',fontWeight:500}}>{m.event}</span>
+              </div>
+              <div style={{flexShrink:0}}><Tag t={typeTag[m.type]}>{m.type}</Tag></div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Quarterly */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Quarterly Roadmap</div>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {roadmap.map((q,i) => (
+            <div key={i} style={{padding:14,borderRadius:8,background:'rgba(255,255,255,0.018)',border:'1px solid var(--border)'}}>
+              <div style={{fontWeight:700,color:'#60a5fa',marginBottom:8,fontSize:13}}>{q.quarter}</div>
+              <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+                {(q.items||[]).map((item,j) => (
+                  <span key={j} style={{padding:'4px 10px',borderRadius:5,background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.15)',fontSize:12,color:'var(--text-2)'}}>{item}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Long-Term Vision */}
+      <div className="card" style={{padding:20}}>
+        <div className="sec" style={{marginBottom:14}}>Long-Term Vision</div>
+        <div className="g3">
+          {[
+            { lbl:'Now', title:'Revenue Platform', desc:'5 agents + Vera. $54K-$80K in 90 days. Assessment, practice prescription, automated delivery at scale.', color:'#3b82f6' },
+            { lbl:'Month 12+', title:'DaaS API Layer', desc:'4 tiers: $10 (scoring) / $20 (+ practice) / $30 (+ report) / $40 (+ state map UI). $5K-$20K MRR at 10K calls/month. Practitioners, coaches, researchers.', color:'#8b5cf6' },
+            { lbl:'Month 18-24', title:'Consciousness Mapping', desc:'Paper 3 + East-West synthesis. 500+ scored clients by Month 36 cannot be replicated from outside the territory.', color:'#06b6d4' },
+          ].map((v,i) => (
+            <div key={i} style={{padding:18,borderRadius:10,background:`${v.color}0d`,border:`1px solid ${v.color}28`}}>
+              <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.08em',color:v.color,marginBottom:6}}>{v.lbl}</div>
+              <div style={{fontSize:14,fontWeight:700,marginBottom:8}}>{v.title}</div>
+              <div style={{fontSize:12,color:'var(--text-2)',lineHeight:1.55}}>{v.desc}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:16,padding:'14px 18px',background:'rgba(6,182,212,0.06)',borderRadius:8,border:'1px solid rgba(6,182,212,0.2)'}}>
+          <div style={{fontSize:12,color:'#22d3ee',fontWeight:600,lineHeight:1.5}}>
+            Exit path: $50M-$200M acquisition (BetterUp, Hogan, PAR, AI labs) OR Tessera Foundation + commercial entity.
+            The core validity claim never changes: mathematical convergence across three independent scientific traditions, not social agreement.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── APP ───────────────────────────────────────────────────────────────── */
+
+function App() {
+  const [tab, setTab] = useState('overview');
+  const D = window.__PDP_DATA__ || {};
+  const git   = D.git   || {};
+  const tests = D.tests || {};
+  const edb   = D.exemplar_db || {};
+
+  const tabs = [
+    { id:'overview',     lbl:'Overview'         },
+    { id:'revenue',      lbl:'Revenue'          },
+    { id:'agents',       lbl:'6-Agent Rollout'  },
+    { id:'scoring',      lbl:'Scoring Engine'   },
+    { id:'research',     lbl:'Research & L2'    },
+    { id:'deliverables', lbl:'Deliverables'     },
+    { id:'roadmap',      lbl:'Roadmap'          },
+  ];
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{padding:'26px 0 18px',borderBottom:'1px solid var(--border)',marginBottom:22}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:16}}>
+          <div>
+            <div className="label" style={{marginBottom:5}}>Christa Diaz Consulting LLC</div>
+            <div style={{fontSize:26,fontWeight:900,letterSpacing:'-0.02em',lineHeight:1}}>
+              Company Command Center
+              <span style={{marginLeft:14,fontSize:14,fontWeight:500,color:'var(--text-3)'}}>PDP Unified v{D.system_version||'5.0'}</span>
+            </div>
+          </div>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontSize:12,color:'var(--text-3)'}}>Last refresh</div>
+            <div style={{fontSize:13,fontFamily:'monospace',color:'var(--text-2)'}}>{D.generated_at||'pending'}</div>
+          </div>
+        </div>
+
+        {/* Status Pills */}
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+          <div style={{padding:'5px 12px',borderRadius:6,background:'rgba(59,130,246,0.1)',border:'1px solid rgba(59,130,246,0.2)',fontSize:12}}>
+            Engine <span style={{fontWeight:700,color:'#60a5fa'}}>v{git.engine_version||'?'}</span>
+          </div>
+          <div style={{padding:'5px 12px',borderRadius:6,background:(tests.failed||0)>0?'rgba(244,63,94,0.1)':'rgba(16,185,129,0.1)',border:`1px solid ${(tests.failed||0)>0?'rgba(244,63,94,0.25)':'rgba(16,185,129,0.25)'}`,fontSize:12}}>
+            Tests <span style={{fontWeight:700,color:(tests.failed||0)>0?'#fb7185':'#34d399'}}>{tests.passing||0} pass / {tests.failed||0} fail</span>
+          </div>
+          <div style={{padding:'5px 12px',borderRadius:6,background:'rgba(139,92,246,0.1)',border:'1px solid rgba(139,92,246,0.2)',fontSize:12,fontFamily:'monospace'}}>
+            {git.current_branch||'unknown'}
+          </div>
+          <div style={{padding:'5px 12px',borderRadius:6,background:'rgba(6,182,212,0.1)',border:'1px solid rgba(6,182,212,0.2)',fontSize:12}}>
+            Exemplars <span style={{fontWeight:700,color:'#22d3ee'}}>{edb.total_exemplars||191}</span>
+          </div>
+          <div style={{padding:'5px 12px',borderRadius:6,background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)',fontSize:12}}>
+            DB Files <span style={{fontWeight:700,color:'#fbbf24'}}>{D.db_file_count||0}</span>
+          </div>
+          <div style={{padding:'5px 13px',borderRadius:6,background:'rgba(59,130,246,0.14)',border:'1px solid rgba(59,130,246,0.38)',fontSize:12,display:'flex',alignItems:'center',gap:7}}>
+            <Dot t="b" />
+            <span style={{fontWeight:700,color:'#60a5fa'}}>SPRINT 1 ACTIVE — Apr 2-8</span>
+          </div>
+          <div style={{padding:'5px 12px',borderRadius:6,background:'rgba(245,158,11,0.1)',border:'1px solid rgba(245,158,11,0.2)',fontSize:12}}>
+            90-Day Target <span style={{fontWeight:700,color:'#fbbf24'}}>$96K</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Tab Nav */}
+      <div style={{display:'flex',gap:4,marginBottom:22,flexWrap:'wrap'}}>
+        {tabs.map(t => (
+          <button key={t.id} className={`nav-tab${tab===t.id?' active':''}`} onClick={() => setTab(t.id)}>
+            {t.lbl}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="fadein" key={tab}>
+        {tab==='overview'     && <OverviewTab     D={D} />}
+        {tab==='revenue'      && <RevenueTab />}
+        {tab==='agents'       && <AgentTab />}
+        {tab==='scoring'      && <ScoringTab      D={D} />}
+        {tab==='research'     && <ResearchTab />}
+        {tab==='deliverables' && <DeliverablesTab D={D} />}
+        {tab==='roadmap'      && <RoadmapTab      D={D} />}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
