@@ -420,6 +420,18 @@ def main():
             dashboard.write_text(html)
             log("Injected data into index.html")
 
+    # Push updated index.html to GitHub Pages so remote URL stays current
+    git_dir = COMMAND_CENTER / ".git"
+    if git_dir.exists():
+        try:
+            run(["git", "add", "index.html"], cwd=COMMAND_CENTER)
+            ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+            run(["git", "commit", "-m", f"refresh: {ts}"], cwd=COMMAND_CENTER)
+            push_result = run(["git", "push", "origin", "main"], cwd=COMMAND_CENTER)
+            log("Pushed index.html to GitHub Pages")
+        except Exception as e:
+            log(f"GitHub push failed: {e}")
+
     log("=== Nightly refresh v2 complete ===")
 
 

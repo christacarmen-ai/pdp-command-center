@@ -57,9 +57,9 @@
         { "id": "6.2", "name": "Intake Agent spec", "status": "shipped", "sprint": "S-BIZ-001", "note": "intake_agent.py — Cognito → Supabase → Stripe" },
         { "id": "6.3", "name": "Delivery Agent spec", "status": "shipped", "sprint": "S-BIZ-001", "note": "delivery_agent.py — report pipeline + client journey" },
         { "id": "6.4", "name": "CRM Agent spec", "status": "shipped", "sprint": "S-BIZ-001", "note": "crm_agent.py — single source of truth for all records" },
-        { "id": "6.5", "name": "Email templates (9 lifecycle emails)", "status": "shipped", "sprint": "S-BIZ-001", "note": "intake, payment, welcome T1-T4, followup, delivery, 30-day checkin" },
+        { "id": "6.5", "name": "Email templates (9 lifecycle emails)", "status": "active", "sprint": "S-BIZ-001", "note": "Needs update: research opt-in toggle replaces T3 Research tier; welcome templates for T1/T2/T3 only" },
         { "id": "6.6", "name": "n8n workflow orchestration config", "status": "shipped", "sprint": "S-BIZ-001", "note": "workflows.json ready for Railway n8n deploy" },
-        { "id": "6.7", "name": "Stripe payment links (Sprint 0 manual revenue)", "status": "active", "note": "Account exists, needs T1/T2/T3/T4 links created" },
+        { "id": "6.7", "name": "Stripe payment links (Sprint 0 manual revenue)", "status": "active", "note": "Account exists, needs T1/T2/T3 links created. No standalone Research tier — research is opt-in toggle on all packages at checkout" },
         { "id": "6.8", "name": "Pipeline Agent spec", "status": "queued", "note": "Outreach + conversion — deferred until Intake/Delivery live" },
         { "id": "6.9", "name": "Content Agent spec", "status": "queued", "note": "Content + reach — deferred luxury" },
         { "id": "6.10", "name": "Jon deploys Supabase + n8n on Railway", "status": "queued", "note": "Blocked on Jon availability" },
@@ -100,7 +100,7 @@
     { "id": "C-6", "name": "6-Agent Architecture + Revenue Projections doc", "target": "Phase 6", "status": "shipped", "note": "PDP_5Agent_Architecture_Revenue.md updated to v4.1 — Mar 31. Agent 6 spec added." },
     { "id": "C-9", "name": "Developmental Arc Agent (Agent 6)", "target": "Phase 8", "status": "shipped", "note": "~/Desktop/PDP_Arc_Agent/ — 5 modules, 2321 lines, git 42526c2, Mar 31" },
     { "id": "C-7", "name": "Cognito Forms Pro plan setup", "target": "Phase 6.2", "status": "active", "note": "Quickstart guide ready, needs account setup" },
-    { "id": "C-8", "name": "Stripe T1/T2/T3/T4 payment links", "target": "Phase 6.7", "status": "active", "note": "Sprint 0 manual revenue — can start immediately" }
+    { "id": "C-8", "name": "Stripe T1/T2/T3 payment links + research opt-in toggle", "target": "Phase 6.7", "status": "active", "note": "Sprint 0 manual revenue — 3 tiers (no standalone Research tier). Research consent toggle on all packages at checkout. Research data sourced from Arc Dashboard post-experience reflections." }
   ],
   "jon_decisions": [
     { "id": "J-1", "question": "Feature extraction approach", "options": "LLM-only / Hybrid / RAG-assisted", "impact": "Phase 3.1 architecture", "resolved": null },
@@ -125,8 +125,10 @@
     { "name": "gold_05_ms", "stage": "3.0", "use": "Expert 3.0-3.5 transition (first transition-stage gold standard)" }
   ],
   "roadmap": [
-    { "quarter": "Q1-Q2 2026", "items": ["6-Agent deploy (Intake + Delivery live by Day 7)", "Sprint 0 manual revenue (Stripe links)", "Arc Agent live Plaud run (118 recordings)", "Client portal", "6-month reassessment", "Meditation audio library", "Workshop materials"] },
-    { "quarter": "Q3-Q4 2026", "items": ["Multi-agent architecture", "Research DB integration", "State mapping module", "Enterprise licensing"] },
-    { "quarter": "2027+", "items": ["DaaS platform", "Practitioner certification", "Research validation", "International expansion"] }
+    { "quarter": "Q2 2026 (Sprints 1-2, Weeks 1-6)", "items": ["FastAPI DaaS layer wrapping Flask scoring engine", "Supabase migration (SQLite → PostgreSQL + RLS)", "Stripe: T1/T2/T3 checkout + B2B metered billing + B2R subscriptions", "Intake Agent live (Stripe webhook → Resend → assessment → provisioning)", "Redis + Celery async scoring queue (eliminates Railway timeout)", "Next.js landing page (tessera.co) — 3 tiers, sample report preview", "Dashboard shell: stage badge, AHI/RPI, report download, practice prescription", "B2B self-serve portal: registration, async training gate ($497), API key issuance", "Cal.com integration for T2/T3 scheduling", "B2C revenue active by Week 3"] },
+    { "quarter": "Q2-Q3 2026 (Sprints 3-4, Weeks 7-14)", "items": ["Layer 2 State Log UI (4-category dropdown, NS before/after, insight field)", "State Agent: 8-feature phenomenological scoring per log entry", "Survey Agent: 30/90/180d cron auto-triggers", "Research opt-in pipeline (Data Mgmt Agent + anonymization)", "PostHog product analytics", "DSPy scoring optimization (~40% token cost reduction)", "B2R research portal (research_aggregate view, cohort analytics, data export)", "pgvector: phenomenological object embedding + similarity search", "Scoring Validator Agent integrated into pre-report pipeline", "Dashboard subscription live ($199/mo B2R, $29 avg B2C seats)"] },
+    { "quarter": "Q3-Q4 2026 (Sprint 5, Weeks 15-18)", "items": ["Personal EA Agent (inbound routing, weekly revenue summary, B2B onboarding)", "Referral system (unique links, Stripe rev-share attribution)", "Community partner portal (co-branded landing pages for retreat centers)", "Mobile-optimized state logging (quick-capture flow)", "Annual cohort report for B2R partners", "Paper 1 submitted (arXiv cs.AI + PsyArXiv)", "NIMH SBIR Phase I application (Sept 5 deadline)"] },
+    { "quarter": "2027+ (Year 1 Target: $59K/mo · $709K ARR)", "items": ["B2B: 3+ providers on Growth plan ($15K/mo)", "B2R: 2+ research orgs + dashboard seats ($4.7K/mo)", "60% autonomous revenue at Month 12 → 90%+ as B2B scales", "Paper 2: Longitudinal Feature Trajectories (Journal of Adult Development)", "DSPy-optimized engine: 40% reduced API cost per report", "DaaS API public docs + B2B onboarding fully self-serve"] },
+    { "quarter": "2027-28 (Exit Thesis)", "items": ["Paper 3: Contemplative-Developmental Cross-Mapping (Frontiers in Psychology)", "500+ scored clients — dataset cannot be replicated externally", "Templeton + Mind and Life funding secured (post-preprint)", "$50M-$200M acquisition target: BetterUp, Hogan, PAR, AI labs"] }
   ]
 }
